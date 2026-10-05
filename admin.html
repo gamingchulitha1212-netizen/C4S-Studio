@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | C4S STUDIO</title>
+  <meta name="description" content="C4S Studio Content &amp; Gallery Administration Panel">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22 font-weight=%22900%22 fill=%22%238b5cf6%22>C4S</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #070913;
+      --bg-card: rgba(14, 18, 36, 0.75);
+      --bg-card-hover: rgba(22, 28, 54, 0.9);
+      --bg-glass: rgba(15, 20, 42, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(139, 92, 246, 0.35);
+      --border-glow-cyan: rgba(6, 182, 212, 0.35);
+      --primary: #8b5cf6;
+      --primary-light: #a78bfa;
+      --primary-dark: #6d28d9;
+      --primary-glow: rgba(139, 92, 246, 0.4);
+      --cyan: #06b6d4;
+      --cyan-light: #22d3ee;
+      --cyan-glow: rgba(6, 182, 212, 0.4);
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --emerald: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 20% 10%, rgba(139, 92, 246, 0.12), transparent),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(6, 182, 212, 0.08), transparent);
+    }
+
+    /* Ambient background glows */
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-1 { top: -100px; left: 10%; width: 450px; height: 450px; background: rgba(139, 92, 246, 0.15); }
+    .glow-2 { bottom: -100px; right: 10%; width: 400px; height: 400px; background: rgba(6, 182, 212, 0.12); }
+
+    /* Admin Navigation */
+    .admin-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 9, 19, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+    .badge-admin-tag {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: var(--primary-light);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(15, 20, 42, 0.8);
+      border: 1px solid var(--border-color);
+      padding: 4px 12px 4px 6px;
+      border-radius: 9999px;
+    }
+    .user-profile-badge img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+    }
+    .user-profile-badge .user-details {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .user-profile-badge .user-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .user-profile-badge .user-email {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Standard Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .btn-sm {
+      padding: 0.45rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--rose);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .btn-danger:hover {
+      background: var(--rose);
+      color: #fff;
+    }
+    .btn-cyan {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+    .btn-cyan:hover {
+      background: var(--cyan);
+      color: #070913;
+    }
+
+    /* Container */
+    .admin-container {
+      max-width: 1300px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Screen States */
+    .auth-state-box {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--cyan));
+    }
+    .auth-card-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+    }
+    .auth-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .auth-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-google-login-large {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      background: #fff;
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+    }
+    .btn-google-login-large:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .dashboard-title h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .dashboard-title p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: var(--transition);
+    }
+    .stat-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .icon-purple { background: rgba(139, 92, 246, 0.15); color: var(--primary); }
+    .icon-cyan   { background: rgba(6, 182, 212, 0.15); color: var(--cyan); }
+    .icon-amber  { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+    .icon-emerald{ background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+    .stat-info h4 {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-info .stat-number {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Dashboard Layout: Left Form, Right List */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 1024px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Form Card */
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    .panel-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .panel-card-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-control {
+      width: 100%;
+      background: rgba(7, 9, 19, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 0.75rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: var(--transition);
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .type-switcher {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .type-btn {
+      background: rgba(7, 9, 19, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.65rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+    .type-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Live Preview Box */
+    .preview-card-box {
+      margin-top: 1.25rem;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      background: rgba(7, 9, 19, 0.4);
+    }
+    .preview-card-box h5 {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .preview-thumb {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--radius-sm);
+      background: #11152a;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* List Controls */
+    .list-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    .search-box input {
+      padding-left: 2.5rem;
+    }
+    .filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Gallery Items Table / Cards */
+    .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .admin-item-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+    }
+    .admin-item-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    .item-thumb-box {
+      width: 100%;
+      height: 160px;
+      background: #0d1124;
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    .admin-item-card:hover .item-thumb-box img {
+      transform: scale(1.05);
+    }
+    .badge-corner {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+    }
+    .badge-corner.photo { background: rgba(139, 92, 246, 0.85); color: #fff; }
+    .badge-corner.video { background: rgba(6, 182, 212, 0.85); color: #070913; }
+
+    .item-body {
+      padding: 1rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .item-category-tag {
+      font-size: 0.72rem;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .item-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .item-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .item-tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 1rem;
+      margin-top: auto;
+    }
+    .tag-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      color: var(--text-subtle);
+    }
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.75rem;
+    }
+    .item-actions .btn {
+      flex: 1;
+      padding: 0.45rem;
+      font-size: 0.8rem;
+    }
+
+    /* Empty state */
+    .empty-list-box {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+    .empty-list-box i {
+      font-size: 3rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    /* Rules Help Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 9, 19, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #0d1226;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 650px;
+      width: 100%;
+      padding: 2rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+    .modal-box h3 {
+      font-family: var(--font-display);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .code-block {
+      background: #060914;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      margin: 1rem 0;
+      white-space: pre;
+    }
+    .close-modal-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+    .close-modal-btn:hover { color: #fff; }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toast {
+      background: #151a36;
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--primary);
+      padding: 0.9rem 1.25rem;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: slideIn 0.3s ease;
+    }
+    .toast.success { border-left-color: var(--emerald); }
+    .toast.error   { border-left-color: var(--rose); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Utility Helper Classes */
+    .d-none { display: none !important; }
+    .d-flex { display: flex !important; }
+    .auth-spinner {
+      width: 48px;
+      height: 48px;
+      border-width: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .auth-title {
+      font-family: var(--font-display);
+    }
+    .auth-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .auth-card-denied {
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+    .icon-rose {
+      color: var(--rose);
+    }
+    .text-white-bold {
+      color: #fff;
+      font-weight: 700;
+    }
+    .auth-btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .auth-admin-note {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+    }
+    .header-actions-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .stat-sync-text {
+      font-size: 1.1rem;
+      color: var(--emerald);
+    }
+    .type-selector-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .field-subtext {
+      font-weight: 400;
+      text-transform: none;
+      color: var(--text-subtle);
+    }
+    .preview-empty-hint {
+      font-size: 0.8rem;
+      color: var(--text-subtle);
+    }
+    .preview-info-wrap {
+      margin-top: 0.5rem;
+    }
+    .preview-title-text {
+      font-size: 0.85rem;
+      color: #fff;
+      display: block;
+    }
+    .preview-tags-text {
+      font-size: 0.75rem;
+      color: var(--cyan);
+    }
+    .form-submit-wrap {
+      margin-top: 1.5rem;
+    }
+    .btn-w-full {
+      width: 100%;
+    }
+    .empty-text-msg {
+      margin-top: 1rem;
+      color: var(--text-muted);
+    }
+    .modal-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .modal-actions-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+    .rules-icon {
+      color: var(--primary);
+    }
+    .video-play-indicator {
+      position: absolute;
+      background: rgba(6, 182, 212, 0.9);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+    }
+    .video-play-icon {
+      font-size: 0.8rem;
+      margin-left: 2px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Admin Navigation Bar -->
+  <header class="admin-nav">
+    <div class="brand-group">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">C4S</span>
+        <span>STUDIO</span>
+      </a>
+      <span class="badge-admin-tag"><i class="fa-solid fa-shield-halved"></i> Admin Portal</span>
+    </div>
+
+    <div class="nav-actions">
+      <a href="index.html" class="btn-link"><i class="fa-solid fa-globe"></i> View Website</a>
+      <button type="button" class="btn-link" id="rulesHelpBtn"><i class="fa-solid fa-book"></i> Firestore Rules</button>
+
+      <div id="navUserBadge" class="user-profile-badge d-none">
+        <img id="navUserAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="Admin">
+        <div class="user-details">
+          <span class="user-name" id="navUserName">Admin</span>
+          <span class="user-email" id="navUserEmail">admin@c4s.com</span>
+        </div>
+      </div>
+
+      <button id="logoutBtn" type="button" class="btn btn-secondary btn-sm d-none" onclick="handleLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <!-- STATE 1: CHECKING AUTH -->
+    <div id="stateChecking" class="auth-state-box">
+      <div class="spinner auth-spinner"></div>
+      <h3 class="auth-title">Connecting to C4S Studio Systems...</h3>
+      <p class="auth-subtitle">Verifying Google security credentials</p>
+    </div>
+
+    <!-- STATE 2: NOT LOGGED IN -->
+    <div id="stateLoggedOut" class="auth-state-box d-none">
+      <div class="auth-card">
+        <div class="auth-card-icon"><i class="fa-solid fa-lock"></i></div>
+        <h2>Restricted Area</h2>
+        <p>Please authenticate with your authorized Google Account to manage the C4S Studio gallery &amp; media.</p>
+
+        <button type="button" class="btn-google-login-large" onclick="handleGoogleLogin()">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+          </svg>
+          Sign in with Google
+        </button>
+
+        <div class="auth-admin-note">
+          Authorized Administrator: <code>chulitharv123@gmail.com</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATE 3: ACCESS DENIED -->
+    <div id="stateDenied" class="auth-state-box d-none">
+      <div class="auth-card auth-card-denied">
+        <div class="auth-card-icon icon-rose"><i class="fa-solid fa-ban"></i></div>
+        <h2>Access Denied</h2>
+        <p>You are signed in as <strong id="deniedEmailText" class="text-white-bold"></strong>, but this account is not authorized as an administrator.</p>
+
+        <div class="auth-btn-stack">
+          <button type="button" class="btn btn-primary" onclick="handleLogout()">
+            <i class="fa-solid fa-user-plus"></i> Switch Google Account
+          </button>
+          <a href="index.html" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Return to C4S Studio
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATE 4: AUTHORIZED ADMIN DASHBOARD -->
+    <div id="stateDashboard" class="d-none">
+      <!-- Dashboard Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1><span>Gallery Management</span></h1>
+          <p>Add, edit, or remove photos &amp; videos displayed on the C4S Studio main showcase.</p>
+        </div>
+
+        <div class="header-actions-row">
+          <button type="button" class="btn btn-cyan" onclick="seedDemoData()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Seed Demo Data
+          </button>
+          <button type="button" class="btn btn-primary" onclick="focusNewItemForm()">
+            <i class="fa-solid fa-plus"></i> Add New Media
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-purple"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="stat-info">
+            <h4>Total Items</h4>
+            <div class="stat-number" id="statTotal">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-cyan"><i class="fa-solid fa-camera"></i></div>
+          <div class="stat-info">
+            <h4>Photos</h4>
+            <div class="stat-number" id="statPhotos">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber"><i class="fa-solid fa-video"></i></div>
+          <div class="stat-info">
+            <h4>Videos</h4>
+            <div class="stat-number" id="statVideos">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-emerald"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-info">
+            <h4>Database</h4>
+            <div class="stat-number stat-sync-text">Live Sync</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- LEFT: Add / Edit Form -->
+        <div class="panel-card" id="formPanel">
+          <div class="panel-card-header">
+            <h3 id="formTitle"><i class="fa-solid fa-cloud-arrow-up"></i> Add New Item</h3>
+            <button id="cancelEditBtn" type="button" class="btn btn-secondary btn-sm d-none" onclick="resetForm()">Cancel Edit</button>
+          </div>
+
+          <form id="mediaForm" onsubmit="handleFormSubmit(event)">
+            <input type="hidden" id="editItemId" value="">
+
+            <!-- Type Selector -->
+            <label class="type-selector-label">MEDIA TYPE</label>
+            <div class="type-switcher">
+              <button type="button" class="type-btn active" id="typeBtnPhoto" onclick="setMediaType('photo')">
+                <i class="fa-solid fa-image"></i> Photo
+              </button>
+              <button type="button" class="type-btn" id="typeBtnVideo" onclick="setMediaType('video')">
+                <i class="fa-solid fa-film"></i> Video
+              </button>
+            </div>
+            <input type="hidden" id="mediaType" value="photo">
+
+            <!-- Category -->
+            <div class="form-group">
+              <label for="mediaCategory">Category</label>
+              <select id="mediaCategory" class="form-control" required>
+                <option value="photo">Photography / Stills</option>
+                <option value="video">Cinematic Video</option>
+                <option value="bts">Behind The Scenes (BTS)</option>
+                <option value="gaming">Gaming &amp; Montages</option>
+                <option value="3d">3D &amp; VFX</option>
+              </select>
+            </div>
+
+            <!-- Title -->
+            <div class="form-group">
+              <label for="mediaTitle">Title</label>
+              <input type="text" id="mediaTitle" class="form-control" placeholder="e.g. Cyberpunk Neon Street Shoot" required oninput="updateLivePreview()">
+            </div>
+
+            <!-- Media URL -->
+            <div class="form-group">
+              <label for="mediaUrl">Media URL <span class="field-subtext">(Image URL or YouTube/MP4 URL)</span></label>
+              <input type="url" id="mediaUrl" class="form-control" placeholder="https://images.unsplash.com/... or https://youtu.be/..." required oninput="handleUrlInput(this.value)">
+            </div>
+
+            <!-- Thumbnail URL (for videos) -->
+            <div class="form-group" id="thumbGroup">
+              <label for="mediaThumb">Thumbnail URL <span class="field-subtext">(Optional - auto-generated for YouTube)</span></label>
+              <input type="url" id="mediaThumb" class="form-control" placeholder="https://..." oninput="updateLivePreview()">
+            </div>
+
+            <!-- Tags -->
+            <div class="form-group">
+              <label for="mediaTags">Tags <span class="field-subtext">(Comma-separated)</span></label>
+              <input type="text" id="mediaTags" class="form-control" placeholder="4K, Cinematic, Studio, Sony A7IV" oninput="updateLivePreview()">
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+              <label for="mediaDesc">Description</label>
+              <textarea id="mediaDesc" class="form-control" placeholder="Brief project summary, gear used, or editing context..." oninput="updateLivePreview()"></textarea>
+            </div>
+
+            <!-- Live Card Preview -->
+            <div class="preview-card-box">
+              <h5><i class="fa-solid fa-eye"></i> Live Preview Card</h5>
+              <div class="preview-thumb" id="previewThumb">
+                <span class="preview-empty-hint">Enter media URL to see preview</span>
+              </div>
+              <div class="preview-info-wrap">
+                <strong id="previewTitle" class="preview-title-text">Title Preview</strong>
+                <span id="previewTags" class="preview-tags-text">#tags</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-submit-wrap">
+              <button type="submit" class="btn btn-primary btn-w-full" id="submitBtn">
+                <i class="fa-solid fa-cloud-arrow-up"></i> <span id="submitBtnText">Publish to Gallery</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- RIGHT: Gallery Items Real-time List -->
+        <div class="panel-card">
+          <div class="list-toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="searchInput" class="form-control" placeholder="Search by title, tag, category..." oninput="filterItems()">
+            </div>
+
+            <div class="filter-pills" id="filterPills">
+              <button type="button" class="pill active" data-filter="all" onclick="setAdminFilter('all')">All</button>
+              <button type="button" class="pill" data-filter="photo" onclick="setAdminFilter('photo')">Photos</button>
+              <button type="button" class="pill" data-filter="video" onclick="setAdminFilter('video')">Videos</button>
+              <button type="button" class="pill" data-filter="bts" onclick="setAdminFilter('bts')">BTS</button>
+              <button type="button" class="pill" data-filter="gaming" onclick="setAdminFilter('gaming')">Gaming</button>
+            </div>
+          </div>
+
+          <div class="items-container" id="itemsContainer">
+            <div class="empty-list-box">
+              <div class="spinner"></div>
+              <p class="empty-text-msg">Syncing gallery from Firestore...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FIRESTORE RULES HELP MODAL -->
+  <div class="modal-backdrop" id="rulesModal">
+    <div class="modal-box">
+      <button type="button" class="close-modal-btn" aria-label="Close Rules Modal" onclick="toggleRulesModal(false)"><i class="fa-solid fa-xmark"></i></button>
+      <h3><i class="fa-solid fa-shield-halved rules-icon"></i> Firebase Firestore Rules</h3>
+      <p class="modal-desc">
+        To allow anyone to view your gallery but only you (<code>chulitharv123@gmail.com</code>) to add, edit, or delete items, copy and paste these rules into your
+        <strong>Firebase Console → Firestore Database → Rules tab</strong>:
+      </p>
+
+      <div class="code-block">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /gallery/{docId} {
+      // Anyone can view the gallery items
+      allow read: if true;
+      // Only authorized admin can add, update, or delete
+      allow write: if request.auth != null &amp;&amp;
+                     request.auth.token.email == 'chulitharv123@gmail.com';
+    }
+  }
+}</div>
+
+      <div class="modal-actions-row">
+        <button type="button" class="btn btn-secondary" onclick="copyRules()"><i class="fa-solid fa-copy"></i> Copy Rules</button>
+        <button type="button" class="btn btn-primary" onclick="toggleRulesModal(false)">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase Scripts (ES Module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCAR-h67q3M8-7cRB5mOcY9KqJYeShWonU",
+      authDomain: "mr-gaming-c4s-website.firebaseapp.com",
+      projectId: "mr-gaming-c4s-website",
+      storageBucket: "mr-gaming-c4s-website.firebasestorage.app",
+      messagingSenderId: "310015601996",
+      appId: "1:310015601996:web:3533dc2ea5fa60d7fc33e9",
+      measurementId: "G-QPMRKCRMQY"
+    };
+
+    const ADMIN_EMAILS = ['chulitharv123@gmail.com'];
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    let allItems     = [];
+    let activeFilter = 'all';
+
+    // Auth State Observer
+    onAuthStateChanged(auth, (user) => {
+      document.getElementById('stateChecking').classList.add('d-none');
+
+      if (!user) {
+        // Not logged in
+        document.getElementById('stateLoggedOut').classList.remove('d-none');
+        document.getElementById('stateDenied').classList.add('d-none');
+        document.getElementById('stateDashboard').classList.add('d-none');
+        document.getElementById('navUserBadge').classList.add('d-none');
+        document.getElementById('logoutBtn').classList.add('d-none');
+      } else if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+        // Authorized Admin
+        document.getElementById('stateLoggedOut').classList.add('d-none');
+        document.getElementById('stateDenied').classList.add('d-none');
+        document.getElementById('stateDashboard').classList.remove('d-none');
+
+        // Update Nav User Badge
+        document.getElementById('navUserBadge').classList.remove('d-none');
+        document.getElementById('navUserAvatar').src = user.photoURL || 'https://placehold.co/64x64/8b5cf6/fff?text=A';
+        document.getElementById('navUserName').textContent = user.displayName || 'Admin';
+        document.getElementById('navUserEmail').textContent = user.email;
+        document.getElementById('logoutBtn').classList.remove('d-none');
+
+        // Start listening to items
+        listenToGalleryItems();
+      } else {
+        // Logged in but NOT admin
+        document.getElementById('stateLoggedOut').classList.add('d-none');
+        document.getElementById('stateDenied').classList.remove('d-none');
+        document.getElementById('deniedEmailText').textContent = user.email;
+        document.getElementById('stateDashboard').classList.add('d-none');
+        document.getElementById('navUserBadge').classList.add('d-none');
+        document.getElementById('logoutBtn').classList.remove('d-none');
+      }
+    });
+
+    // Sign in handler
+    window.handleGoogleLogin = async () => {
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        showToast('Signed in successfully!', 'success');
+      } catch (err) {
+        console.error('Login error:', err);
+        showToast(err.message || 'Login failed', 'error');
+      }
+    };
+
+    // Logout handler
+    window.handleLogout = async () => {
+      try {
+        await signOut(auth);
+        showToast('Signed out', 'success');
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
+    };
+
+    // Real-time Firestore Sync
+    function listenToGalleryItems() {
+      const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+      onSnapshot(q, (snapshot) => {
+        allItems = [];
+        snapshot.forEach((docSnap) => {
+          allItems.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        updateStats();
+        renderAdminItems();
+      }, (err) => {
+        console.error('Firestore listener error:', err);
+        showToast('Firestore access notice: Verify your security rules if items do not load.', 'error');
+      });
+    }
+
+    // Update Stats
+    function updateStats() {
+      document.getElementById('statTotal').textContent = allItems.length;
+      document.getElementById('statPhotos').textContent = allItems.filter(i => i.type === 'photo').length;
+      document.getElementById('statVideos').textContent = allItems.filter(i => i.type === 'video').length;
+    }
+
+    // Helper: Parse YouTube
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|live\/|watch\?.+&v=))([\w-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    // URL input auto-thumb detection
+    window.handleUrlInput = (url) => {
+      const type = document.getElementById('mediaType').value;
+      if (type === 'video') {
+        const ytId = getYouTubeId(url);
+        const thumbInput = document.getElementById('mediaThumb');
+        if (ytId && !thumbInput.value) {
+          thumbInput.value = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        }
+      }
+      updateLivePreview();
+    };
+
+    // Switch media type tab
+    window.setMediaType = (type) => {
+      document.getElementById('mediaType').value = type;
+      const btnPhoto = document.getElementById('typeBtnPhoto');
+      const btnVideo = document.getElementById('typeBtnVideo');
+
+      if (type === 'photo') {
+        btnPhoto.classList.add('active');
+        btnVideo.classList.remove('active');
+        document.getElementById('mediaCategory').value = 'photo';
+      } else {
+        btnVideo.classList.add('active');
+        btnPhoto.classList.remove('active');
+        document.getElementById('mediaCategory').value = 'video';
+      }
+      updateLivePreview();
+    };
+
+    // Live preview updater
+    window.updateLivePreview = () => {
+      const title = document.getElementById('mediaTitle').value.trim() || 'Title Preview';
+      const url   = document.getElementById('mediaUrl').value.trim();
+      const thumb = document.getElementById('mediaThumb').value.trim();
+      const tags  = document.getElementById('mediaTags').value.trim();
+      const type  = document.getElementById('mediaType').value;
+
+      document.getElementById('previewTitle').textContent = title;
+      document.getElementById('previewTags').textContent = tags ? tags.split(',').map(t => '#' + t.trim()).join(' ') : '#preview';
+
+      const thumbBox = document.getElementById('previewThumb');
+      let displayImg = thumb || url;
+
+      if (type === 'video') {
+        const ytId = getYouTubeId(url);
+        if (ytId && !thumb) {
+          displayImg = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        }
+      }
+
+      if (displayImg) {
+        thumbBox.innerHTML = `
+          <img src="${displayImg}" alt="Preview" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1a0533/8b5cf6?text=Invalid+Image+URL'">
+          ${type === 'video' ? '<div class="video-play-indicator"><i class="fa-solid fa-play video-play-icon"></i></div>' : ''}
+        `;
+      } else {
+        thumbBox.innerHTML = `<span class="preview-empty-hint">Enter media URL to see preview</span>`;
+      }
+    };
+
+    // Render Admin items
+    window.renderAdminItems = () => {
+      const container = document.getElementById('itemsContainer');
+      const search = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+
+      let filtered = allItems;
+
+      if (activeFilter !== 'all') {
+        filtered = filtered.filter(i => i.type === activeFilter || i.category === activeFilter);
+      }
+
+      if (search) {
+        filtered = filtered.filter(i => {
+          const t = (i.title || '').toLowerCase();
+          const d = (i.description || '').toLowerCase();
+          const c = (i.category || '').toLowerCase();
+          const tags = (i.tags || []).join(' ').toLowerCase();
+          return t.includes(search) || d.includes(search) || c.includes(search) || tags.includes(search);
+        });
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-list-box">
+            <i class="fa-solid fa-photo-film"></i>
+            <h3>No Media Found</h3>
+            <p class="empty-text-msg">
+              ${allItems.length === 0 ? 'Your gallery is currently empty. Click "Add New Media" or "Seed Demo Data" above!' : 'No items match your active filter.'}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((item) => {
+        const isVideo = item.type === 'video';
+        const ytId    = isVideo ? getYouTubeId(item.url) : null;
+        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
+        const thumb   = item.thumbnail || ytThumb || item.url || '';
+        const tags    = (item.tags || []).map(t => `<span class="tag-badge">${t}</span>`).join('');
+        const fallback = 'https://placehold.co/400x300/1a0533/8b5cf6?text=' + (isVideo ? 'Video' : 'Photo');
+
+        return `
+          <div class="admin-item-card" id="card-${item.id}">
+            <div class="item-thumb-box">
+              <img src="${thumb || fallback}" alt="${item.title || ''}" onerror="this.src='${fallback}'">
+              <span class="badge-corner ${isVideo ? 'video' : 'photo'}">
+                <i class="fa-solid ${isVideo ? 'fa-film' : 'fa-image'}"></i>
+                ${isVideo ? 'Video' : 'Photo'}
+              </span>
+            </div>
+            <div class="item-body">
+              <span class="item-category-tag">${item.category || 'General'}</span>
+              <h4 class="item-title">${item.title || 'Untitled'}</h4>
+              <p class="item-desc">${item.description || 'No description provided.'}</p>
+              <div class="item-tags-wrap">${tags}</div>
+              <div class="item-actions">
+                <button type="button" class="btn btn-secondary" onclick="startEditItem('${item.id}')">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button type="button" class="btn btn-danger" onclick="deleteItem('${item.id}')">
+                  <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // Filter controls
+    window.setAdminFilter = (filter) => {
+      activeFilter = filter;
+      document.querySelectorAll('#filterPills .pill').forEach(p => {
+        p.classList.toggle('active', p.getAttribute('data-filter') === filter);
+      });
+      renderAdminItems();
+    };
+
+    window.filterItems = () => {
+      renderAdminItems();
+    };
+
+    // Form submit: Add or Update
+    window.handleFormSubmit = async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+      const editId = document.getElementById('editItemId').value;
+
+      const title = document.getElementById('mediaTitle').value.trim();
+      const type  = document.getElementById('mediaType').value;
+      const category = document.getElementById('mediaCategory').value;
+      const url   = document.getElementById('mediaUrl').value.trim();
+      let thumb   = document.getElementById('mediaThumb').value.trim();
+      const desc  = document.getElementById('mediaDesc').value.trim();
+      const tagsRaw = document.getElementById('mediaTags').value.trim();
+
+      if (type === 'video' && !thumb) {
+        const ytId = getYouTubeId(url);
+        if (ytId) thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      }
+
+      const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+      submitBtn.disabled = true;
+      submitBtnText.textContent = editId ? 'Updating...' : 'Publishing...';
+
+      try {
+        if (editId) {
+          // Update existing doc
+          const docRef = doc(db, 'gallery', editId);
+          await updateDoc(docRef, {
+            title,
+            type,
+            category,
+            url,
+            thumbnail: thumb,
+            description: desc,
+            tags,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Gallery item updated!', 'success');
+          resetForm();
+        } else {
+          // Add new doc
+          await addDoc(collection(db, 'gallery'), {
+            title,
+            type,
+            category,
+            url,
+            thumbnail: thumb,
+            description: desc,
+            tags,
+            createdAt: serverTimestamp()
+          });
+          showToast('New media published to gallery!', 'success');
+          resetForm();
+        }
+      } catch (err) {
+        console.error('Save error:', err);
+        showToast('Error saving item: ' + (err.message || 'Check Firestore permissions'), 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtnText.textContent = editId ? 'Update Item' : 'Publish to Gallery';
+      }
+    };
+
+    // Start Edit Item
+    window.startEditItem = (id) => {
+      const item = allItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('editItemId').value = item.id;
+      document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Item`;
+      document.getElementById('submitBtnText').textContent = 'Update Item';
+      document.getElementById('cancelEditBtn').classList.remove('d-none');
+
+      setMediaType(item.type || 'photo');
+      document.getElementById('mediaCategory').value = item.category || 'photo';
+      document.getElementById('mediaTitle').value = item.title || '';
+      document.getElementById('mediaUrl').value = item.url || '';
+      document.getElementById('mediaThumb').value = item.thumbnail || '';
+      document.getElementById('mediaDesc').value = item.description || '';
+      document.getElementById('mediaTags').value = (item.tags || []).join(', ');
+
+      updateLivePreview();
+
+      // Scroll form into view smoothly
+      document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Reset Form
+    window.resetForm = () => {
+      document.getElementById('mediaForm').reset();
+      document.getElementById('editItemId').value = '';
+      document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Add New Item`;
+      document.getElementById('submitBtnText').textContent = 'Publish to Gallery';
+      document.getElementById('cancelEditBtn').classList.add('d-none');
+      setMediaType('photo');
+      updateLivePreview();
+    };
+
+    // Delete Item
+    window.deleteItem = async (id) => {
+      const item = allItems.find(i => i.id === id);
+      const name = item ? `"${item.title}"` : 'this item';
+
+      if (!confirm(`Are you sure you want to delete ${name} from the gallery?`)) return;
+
+      try {
+        await deleteDoc(doc(db, 'gallery', id));
+        showToast('Item deleted successfully', 'success');
+      } catch (err) {
+        console.error('Delete error:', err);
+        showToast('Error deleting item: ' + err.message, 'error');
+      }
+    };
+
+    // Focus form
+    window.focusNewItemForm = () => {
+      resetForm();
+      document.getElementById('mediaTitle').focus();
+      document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Seed Demo Data
+    window.seedDemoData = async () => {
+      if (!confirm('This will add 6 curated showcase demo photos & videos to your Firestore gallery. Proceed?')) return;
+
+      const demoItems = [
+        {
+          title: "Neon Cyberpunk Studio Photography",
+          type: "photo",
+          category: "photo",
+          url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
+          thumbnail: "",
+          description: "High-contrast neon studio portraits with RGB atmospheric smoke and cinematic color grading.",
+          tags: ["Cyberpunk", "Studio", "Photography", "Sony A7IV"]
+        },
+        {
+          title: "Valorant Radiant Tournament Highlights",
+          type: "video",
+          category: "gaming",
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          thumbnail: "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1200&q=80",
+          description: "4K 60FPS synced montage with custom kinetic typography, sound design, and 3D screen shakes.",
+          tags: ["Valorant", "Montage", "Esports", "4K 60FPS"]
+        },
+        {
+          title: "Behind The Scenes: Commercial Shoot",
+          type: "photo",
+          category: "bts",
+          url: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80",
+          thumbnail: "",
+          description: "Gimbal rigging and multi-camera setup during our latest esports branding production.",
+          tags: ["BTS", "Production", "Cinema Rig", "Lighting"]
+        },
+        {
+          title: "Apex Legends Cinematic Motion Intro",
+          type: "video",
+          category: "video",
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
+          description: "Blender 3D camera sweeps combined with Unreal Engine 5 particle systems and After Effects composites.",
+          tags: ["Apex Legends", "3D VFX", "After Effects", "Unreal Engine"]
+        },
+        {
+          title: "Esports Clan Jersey & Merchandise Showcase",
+          type: "photo",
+          category: "photo",
+          url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
+          thumbnail: "",
+          description: "Professional product photography for limited edition competitive team merchandise.",
+          tags: ["Merch", "Branding", "Apparel", "Esports"]
+        },
+        {
+          title: "3D Metallic Logo Reveal & Sound FX",
+          type: "video",
+          category: "3d",
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+          description: "Ray-traced chrome texturing with reactive bass audio visualization.",
+          tags: ["Blender", "3D Logo", "Chrome", "SFX"]
+        }
+      ];
+
+      try {
+        showToast('Adding demo items...', 'success');
+        for (const item of demoItems) {
+          await addDoc(collection(db, 'gallery'), {
+            ...item,
+            createdAt: serverTimestamp()
+          });
+        }
+        showToast('6 demo showcase items added to Firestore!', 'success');
+      } catch (err) {
+        console.error('Seed error:', err);
+        showToast('Failed to seed: ' + err.message, 'error');
+      }
+    };
+
+    // Modal toggles
+    window.toggleRulesModal = (show) => {
+      document.getElementById('rulesModal').classList.toggle('open', show);
+    };
+
+    document.getElementById('rulesHelpBtn')?.addEventListener('click', () => {
+      toggleRulesModal(true);
+    });
+
+    window.copyRules = () => {
+      const code = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /gallery/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                     request.auth.token.email == 'chulitharv123@gmail.com';
+    }
+  }
+}`;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Firestore rules copied to clipboard!', 'success');
+      });
+    };
+
+    // Toast helper
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `
+        <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i>
+        <span>${msg}</span>
+      `;
+      container.appendChild(t);
+      setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(10px)';
+        t.style.transition = 'all 0.3s ease';
+        setTimeout(() => t.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

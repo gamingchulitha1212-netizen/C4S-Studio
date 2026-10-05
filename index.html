@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4S STUDIO | Next-Gen Gaming, Media &amp; Creative Digital Studio</title>
+  <meta name="description" content="C4S Studio is an elite creative studio specializing in Gaming, Cinematic Video Editing, 3D Design, VFX, and Digital Branding. Elevating your digital presence.">
+  <meta name="keywords" content="C4S Studio, Gaming Studio, Video Editing, 3D Animation, Esports Branding, Creative Agency Sri Lanka">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22 font-weight=%22900%22 fill=%22%238b5cf6%22>C4S</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Interactive Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="site-header" id="header">
+    <div class="header-container">
+      <a href="#hero" class="brand-logo">
+        <span class="logo-badge">C4S</span>
+        <span class="logo-text">STUDIO<span class="dot">.</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+          <li><a href="#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="#calculator" class="nav-link">Estimator</a></li>
+          <li><a href="#pricing" class="nav-link">Pricing</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button type="button" id="audioToggle" class="icon-btn" title="Toggle Sound Effects" aria-label="Toggle sound">
+          <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+        </button>
+        <!-- Google Auth Header Widget -->
+        <div id="headerAuthContainer" class="header-auth-container"></div>
+        <a href="#contact" class="btn btn-sm btn-primary glow-effect">
+          <span>Start Project</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <span class="logo-badge">C4S</span>
+        <span class="logo-text">STUDIO<span class="dot">.</span></span>
+      </div>
+      <button type="button" class="drawer-close" id="drawerClose" aria-label="Close Navigation Menu"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <!-- Mobile Google Auth Area -->
+    <div id="mobileAuthContainer" class="mobile-auth-container"></div>
+    <ul class="mobile-nav-list">
+      <li><a href="#hero" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="#about" class="mobile-nav-link"><i class="fa-solid fa-user-astronaut"></i> About Us</a></li>
+      <li><a href="#services" class="mobile-nav-link"><i class="fa-solid fa-layer-group"></i> Services</a></li>
+      <li><a href="#portfolio" class="mobile-nav-link"><i class="fa-solid fa-gamepad"></i> Portfolio</a></li>
+      <li><a href="#gallery" class="mobile-nav-link"><i class="fa-solid fa-images"></i> Gallery</a></li>
+      <li><a href="#calculator" class="mobile-nav-link"><i class="fa-solid fa-calculator"></i> Price Estimator</a></li>
+      <li><a href="#pricing" class="mobile-nav-link"><i class="fa-solid fa-tag"></i> Packages</a></li>
+      <li><a href="#contact" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="#contact" class="btn btn-primary btn-block">Get a Quote</a>
+      <div class="social-pills">
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://discord.com" target="_blank" rel="noopener" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-indicator"></span>
+            <span class="badge-text">CREATIVE DIGITAL &amp; GAMING POWERHOUSE</span>
+          </div>
+
+          <h1 class="hero-title">
+            TRANSFORMING <br>
+            <span class="gradient-text glitch-effect" data-text="IDEAS INTO">IDEAS INTO</span> <br>
+            <span class="highlight-cyan">DIGITAL LEGENDS</span>
+          </h1>
+
+          <p class="hero-description">
+            Welcome to <strong>C4S Studio</strong>. We craft mind-blowing gaming visuals, cinematic video edits, high-end 3D graphics, and dynamic digital experiences designed to conquer the internet.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#portfolio" class="btn btn-primary glow-effect">
+              <i class="fa-solid fa-play"></i>
+              <span>Explore Creations</span>
+            </a>
+            <a href="#calculator" class="btn btn-secondary">
+              <i class="fa-solid fa-calculator"></i>
+              <span>Cost Estimator</span>
+            </a>
+          </div>
+
+          <!-- Trust &amp; Stats bar -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number" data-count="120">0</span><span class="stat-plus">+</span>
+              <span class="stat-label">Projects Completed</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="50">0</span><span class="stat-plus">K+</span>
+              <span class="stat-label">Happy Community</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="99">0</span><span class="stat-plus">%</span>
+              <span class="stat-label">Satisfaction Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="cube-card-wrapper">
+            <div class="studio-card-3d">
+              <div class="card-inner">
+                <div class="card-header-status">
+                  <div class="status-tag live">
+                    <span class="live-dot"></span> STUDIO LIVE
+                  </div>
+                  <div class="tech-specs">
+                    <span>4K 60FPS</span>
+                    <span>3D &amp; VFX</span>
+                  </div>
+                </div>
+
+                <div class="center-emblem">
+                  <div class="emblem-ring ring-1"></div>
+                  <div class="emblem-ring ring-2"></div>
+                  <div class="emblem-core">
+                    <i class="fa-solid fa-gamepad emblem-icon"></i>
+                  </div>
+                </div>
+
+                <div class="card-feature-list">
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-video"></i> Cinematic Video
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-cubes"></i> 3D Modeling
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-trophy"></i> Esports Branding
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-code"></i> Creative Web
+                  </div>
+                </div>
+
+                <div class="card-footer-quote">
+                  <p>"Where Gaming passion meets professional creative perfection."</p>
+                  <small>— C4S Studio Crew</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHT TICKER -->
+    <div class="marquee-strip">
+      <div class="marquee-track">
+        <span>🎮 GAMING CONTENT</span>
+        <span>•</span>
+        <span>🎬 CINEMATIC VIDEO EDITING</span>
+        <span>•</span>
+        <span>🔥 3D ANIMATION &amp; VFX</span>
+        <span>•</span>
+        <span>⚡ ESPORTS BRANDING</span>
+        <span>•</span>
+        <span>🚀 STREAM PACKS &amp; OVERLAYS</span>
+        <span>•</span>
+        <span>💻 WEB DESIGN &amp; DEV</span>
+        <span>•</span>
+        <span>🎧 SOUND EFFECTS &amp; AUDIO</span>
+        <span>•</span>
+        <!-- Duplicated for continuous loop -->
+        <span>🎮 GAMING CONTENT</span>
+        <span>•</span>
+        <span>🎬 CINEMATIC VIDEO EDITING</span>
+        <span>•</span>
+        <span>🔥 3D ANIMATION &amp; VFX</span>
+        <span>•</span>
+        <span>⚡ ESPORTS BRANDING</span>
+        <span>•</span>
+        <span>🚀 STREAM PACKS &amp; OVERLAYS</span>
+        <span>•</span>
+        <span>💻 WEB DESIGN &amp; DEV</span>
+        <span>•</span>
+        <span>🎧 SOUND EFFECTS &amp; AUDIO</span>
+        <span>•</span>
+      </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <section class="section about-section" id="about">
+      <div class="container">
+        <div class="section-badge">ABOUT C4S STUDIO</div>
+        <h2 class="section-title">Built by Gamers, Engineered by <span class="gradient-text">Creatives</span></h2>
+        <p class="section-subtitle">We merge cutting-edge technology with high-adrenaline artistic vision to produce world-class media for creators, gamers, and modern brands.</p>
+
+        <!-- Pillars -->
+        <div class="about-pillars">
+          <div class="about-card glass-panel">
+            <div class="card-icon-box">
+              <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h3>Our Mission</h3>
+            <p>Empower creators and esports pioneers with top-tier digital assets, video edits, and branding that stand out in saturated online spaces.</p>
+          </div>
+
+          <div class="about-card glass-panel">
+            <div class="card-icon-box cyan-box">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3>Ultra-Fast Turnaround</h3>
+            <p>Gaming and digital media move at lightspeed. We deliver rapid, polished, and broadcast-ready content without compromising a single frame.</p>
+          </div>
+
+          <div class="about-card glass-panel">
+            <div class="card-icon-box amber-box">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3>Custom High-Octane Style</h3>
+            <p>Every project receives bespoke animations, custom typography, sound design, and color grading tailored specifically to your audience.</p>
+          </div>
+        </div>
+
+        <!-- Experience timeline / highlights -->
+        <div class="studio-values glass-panel">
+          <div class="value-item">
+            <div class="value-number">01</div>
+            <div class="value-info">
+              <h4>Ideation &amp; Strategy</h4>
+              <p>We analyze your channel or brand vibe, crafting an actionable concept map.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">02</div>
+            <div class="value-info">
+              <h4>High-End Production</h4>
+              <p>Rendered in 4K resolution with custom soundscapes and fluid motion graphics.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">03</div>
+            <div class="value-info">
+              <h4>Revision &amp; Polish</h4>
+              <p>We tweak every pixel until you and your fans are 100% blown away.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">04</div>
+            <div class="value-info">
+              <h4>Launch &amp; Dominate</h4>
+              <p>Delivery of optimized assets ready for YouTube, TikTok, Twitch, and web.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="section services-section" id="services">
+      <div class="container">
+        <div class="section-badge">SERVICES WE PROVIDE</div>
+        <h2 class="section-title">Everything You Need to <span class="gradient-text">Level Up</span></h2>
+        <p class="section-subtitle">From solo streamers to competitive esports teams and corporate tech brands, we offer full-spectrum creative solutions.</p>
+
+        <div class="services-grid">
+          <!-- Service 1 -->
+          <div class="service-card glass-panel" data-service="gaming-montage">
+            <div class="service-header">
+              <div class="service-icon"><i class="fa-solid fa-gamepad"></i></div>
+              <span class="service-num">01</span>
+            </div>
+            <h3 class="service-title">Gaming Montages &amp; Highlights</h3>
+            <p class="service-desc">Synced beat-matching, velocity curve motion, camera shakes, and visual effects for Valorant, GTA V, Free Fire, Call of Duty, and Fortnite.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> 3D Cinematic Replays &amp; Camera mods</li>
+              <li><i class="fa-solid fa-check"></i> High-Energy Music Sync</li>
+              <li><i class="fa-solid fa-check"></i> Custom Hitmakers &amp; Sound FX</li>
+            </ul>
+          </div>
+
+          <!-- Service 2 -->
+          <div class="service-card glass-panel" data-service="video-production">
+            <div class="service-header">
+              <div class="service-icon cyan-box"><i class="fa-solid fa-film"></i></div>
+              <span class="service-num">02</span>
+            </div>
+            <h3 class="service-title">Cinematic Video Editing</h3>
+            <p class="service-desc">Story-driven YouTube videos, viral TikToks/Reels, documentaries, and commercial promo videos edited with Hollywood pacing.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Dynamic Subtitles &amp; Motion Graphics</li>
+              <li><i class="fa-solid fa-check"></i> Professional Color Grading</li>
+              <li><i class="fa-solid fa-check"></i> Retention-Focused Hook Structuring</li>
+            </ul>
+          </div>
+
+          <!-- Service 3 -->
+          <div class="service-card glass-panel" data-service="stream-packs">
+            <div class="service-header">
+              <div class="service-icon amber-box"><i class="fa-solid fa-broadcast-tower"></i></div>
+              <span class="service-num">03</span>
+            </div>
+            <h3 class="service-title">Stream Packs &amp; Overlays</h3>
+            <p class="service-desc">Animated overlays, Starting Soon screens, Intermissions, BRB scenes, Webcam frames, and stinger transitions for Twitch &amp; YouTube.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Custom 60FPS Stinger Transitions</li>
+              <li><i class="fa-solid fa-check"></i> OBS / Streamlabs 1-Click Setup</li>
+              <li><i class="fa-solid fa-check"></i> Chat Box &amp; Alert Animations</li>
+            </ul>
+          </div>
+
+          <!-- Service 4 -->
+          <div class="service-card glass-panel" data-service="3d-design">
+            <div class="service-header">
+              <div class="service-icon"><i class="fa-solid fa-cube"></i></div>
+              <span class="service-num">04</span>
+            </div>
+            <h3 class="service-title">3D Modeling &amp; Intro VFX</h3>
+            <p class="service-desc">Futuristic 3D logo reveals, product visualizations, character rendering, and customized 3D environments built with Blender &amp; Unreal.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> 3D Metallic / Holographic Logos</li>
+              <li><i class="fa-solid fa-check"></i> Game Asset Concept Design</li>
+              <li><i class="fa-solid fa-check"></i> Physics &amp; Particle Simulations</li>
+            </ul>
+          </div>
+
+          <!-- Service 5 -->
+          <div class="service-card glass-panel" data-service="esports-branding">
+            <div class="service-header">
+              <div class="service-icon cyan-box"><i class="fa-solid fa-shield-halved"></i></div>
+              <span class="service-num">05</span>
+            </div>
+            <h3 class="service-title">Esports &amp; Mascot Branding</h3>
+            <p class="service-desc">Fierce mascot logos, team jerseys, tournament banner kits, social media avatars, and brand guidelines for competitive gaming clans.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Vector Mascot &amp; Monogram Logos</li>
+              <li><i class="fa-solid fa-check"></i> Team Jersey &amp; Merchandise Print Prep</li>
+              <li><i class="fa-solid fa-check"></i> Complete Social Media Kits</li>
+            </ul>
+          </div>
+
+          <!-- Service 6 -->
+          <div class="service-card glass-panel" data-service="web-development">
+            <div class="service-header">
+              <div class="service-icon amber-box"><i class="fa-solid fa-code"></i></div>
+              <span class="service-num">06</span>
+            </div>
+            <h3 class="service-title">Web &amp; Interactive Portals</h3>
+            <p class="service-desc">Ultra-sleek landing pages, clan websites, portfolio hubs, and merchandise store integrations built for blazing speed and mobile supremacy.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Dark-mode Cyberpunk UI/UX</li>
+              <li><i class="fa-solid fa-check"></i> Interactive Canvas &amp; 3D WebGL</li>
+              <li><i class="fa-solid fa-check"></i> SEO &amp; Lightning-fast Hosting</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO SECTION -->
+    <section class="section portfolio-section" id="portfolio">
+      <div class="container">
+        <div class="section-badge">CREATIVE SHOWCASE</div>
+        <h2 class="section-title">Featured <span class="gradient-text">Masterpieces</span></h2>
+        <p class="section-subtitle">Take a look at some of our best video concepts, gaming designs, and brand identities crafted at C4S Studio.</p>
+
+        <!-- Category Filters -->
+        <div class="portfolio-filters" id="portfolioFilters">
+          <button type="button" class="filter-btn active" data-filter="all">All Works</button>
+          <button type="button" class="filter-btn" data-filter="gaming">Gaming &amp; Montages</button>
+          <button type="button" class="filter-btn" data-filter="video">Video Editing</button>
+          <button type="button" class="filter-btn" data-filter="3d">3D &amp; VFX</button>
+          <button type="button" class="filter-btn" data-filter="branding">Branding &amp; Overlays</button>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="portfolio-grid" id="portfolioGrid">
+          <!-- Item 1 -->
+          <div class="portfolio-card" data-category="gaming" onclick="openModal('cyber-frag')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-1">
+                <i class="fa-solid fa-crosshairs card-bg-icon"></i>
+                <div class="preview-badge">VALORANT / CS2</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Gaming</span>
+                <span class="tag">4K Montages</span>
+              </div>
+              <h4>Cyber Frag Velocity</h4>
+              <p>High-octane synced montage with 3D camera tracking and kinetic sound fx.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="portfolio-card" data-category="video" onclick="openModal('neon-tokyo')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-2">
+                <i class="fa-solid fa-clapperboard card-bg-icon"></i>
+                <div class="preview-badge">CINEMATIC 4K</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Video</span>
+                <span class="tag">Color Grade</span>
+              </div>
+              <h4>Neon Cyber Odyssey</h4>
+              <p>Futuristic narrative reel with customized neon color palettes and dynamic typography.</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="portfolio-card" data-category="3d" onclick="openModal('c4s-core')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-3">
+                <i class="fa-solid fa-cubes-stacked card-bg-icon"></i>
+                <div class="preview-badge">BLENDER / UNREAL</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">3D Art</span>
+                <span class="tag">VFX</span>
+              </div>
+              <h4>C4S Quantum Core 3D</h4>
+              <p>Interactive 3D logo reveal featuring particle fragmentation and metallic chrome shader.</p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="portfolio-card" data-category="branding" onclick="openModal('esports-viper')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-4">
+                <i class="fa-solid fa-shield-cat card-bg-icon"></i>
+                <div class="preview-badge">BRAND IDENTITY</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Branding</span>
+                <span class="tag">Esports</span>
+              </div>
+              <h4>Viper Strike Clan Kit</h4>
+              <p>Comprehensive tournament branding, jersey design, twitch overlays, and victory graphics.</p>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="portfolio-card" data-category="gaming" onclick="openModal('gta-cinematic')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-5">
+                <i class="fa-solid fa-car-burst card-bg-icon"></i>
+                <div class="preview-badge">GTA V ROLEPLAY</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Gaming</span>
+                <span class="tag">Cinematic</span>
+              </div>
+              <h4>Night City Heist RP</h4>
+              <p>Custom server cinematic trailer featuring drone shots, atmospheric voiceover, and car chases.</p>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="portfolio-card" data-category="branding" onclick="openModal('stream-hud')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-6">
+                <i class="fa-solid fa-tv card-bg-icon"></i>
+                <div class="preview-badge">STREAM OVERLAY</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Stream</span>
+                <span class="tag">UI Design</span>
+              </div>
+              <h4>Apex Predator Stream HUD</h4>
+              <p>Animated alerts, reactive audio bars, modern webcam frame, and minimalist chat widgets.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="section gallery-section" id="gallery">
+      <div class="container">
+        <div class="section-badge">PHOTO &amp; VIDEO GALLERY</div>
+        <h2 class="section-title">Behind the <span class="gradient-text">Scenes</span></h2>
+        <p class="section-subtitle">Real work captured from our studio — photos, videos, and creative moments that define C4S Studio.</p>
+
+        <!-- Gallery Filter Tabs -->
+        <div class="gallery-filter-tabs" id="galleryFilterTabs">
+          <button type="button" class="gallery-tab active" data-gfilter="all"><i class="fa-solid fa-border-all"></i> All</button>
+          <button type="button" class="gallery-tab" data-gfilter="photo"><i class="fa-solid fa-image"></i> Photos</button>
+          <button type="button" class="gallery-tab" data-gfilter="video"><i class="fa-solid fa-film"></i> Videos</button>
+          <button type="button" class="gallery-tab" data-gfilter="bts"><i class="fa-solid fa-clapperboard"></i> BTS</button>
+          <button type="button" class="gallery-tab" data-gfilter="gaming"><i class="fa-solid fa-gamepad"></i> Gaming</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="gallery-loading" id="galleryLoading">
+            <div class="gallery-spinner"></div>
+            <p>Loading gallery...</p>
+          </div>
+        </div>
+
+        <!-- Gallery Empty State -->
+        <div class="gallery-empty" id="galleryEmpty" style="display:none;">
+          <i class="fa-solid fa-images"></i>
+          <h3>No Items Yet</h3>
+          <p>The gallery is being populated. Check back soon!</p>
+          <div id="galleryLoginPrompt"></div>
+        </div>
+
+        <!-- Gallery Lightbox -->
+        <div class="gallery-lightbox" id="galleryLightbox">
+          <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+          <div class="lightbox-container">
+            <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close Lightbox"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous Media"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="lightbox-media" id="lightboxMedia"></div>
+            <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next Media"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="lightbox-info" id="lightboxInfo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE PROJECT COST ESTIMATOR -->
+    <section class="section calculator-section" id="calculator">
+      <div class="container">
+        <div class="calculator-wrapper glass-panel">
+          <div class="calc-header">
+            <div class="section-badge">INTERACTIVE TOOL</div>
+            <h2 class="section-title">Instant <span class="gradient-text">Project Estimator</span></h2>
+            <p class="section-subtitle">Select what you need and get an immediate budget approximation for your dream project.</p>
+          </div>
+
+          <div class="calc-grid">
+            <div class="calc-options">
+              <!-- Service Type -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-bolt"></i> Primary Service Needed</label>
+                <div class="chip-options" id="serviceOptions">
+                  <button type="button" class="calc-chip active" data-cost="25" data-service="Gaming Montage">Gaming Montage ($25+)</button>
+                  <button type="button" class="calc-chip" data-cost="40" data-service="YouTube Video Edit">Full Video Edit ($40+)</button>
+                  <button type="button" class="calc-chip" data-cost="50" data-service="Stream Overlay Pack">Stream Pack ($50+)</button>
+                  <button type="button" class="calc-chip" data-cost="75" data-service="3D Logo &amp; Intro">3D Animation &amp; Logo ($75+)</button>
+                  <button type="button" class="calc-chip" data-cost="100" data-service="Esports Full Branding">Esports Branding ($100+)</button>
+                </div>
+              </div>
+
+              <!-- Quality & Length -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-clock"></i> Video / Project Duration</label>
+                <div class="range-container">
+                  <input type="range" min="1" max="15" value="3" class="custom-slider" id="durationSlider">
+                  <div class="range-display">
+                    <span id="durationValue">3</span> <span id="durationUnit">Minutes / Assets</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add-ons -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-plus-circle"></i> Premium Add-ons</label>
+                <div class="addons-grid">
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="20" data-name="4K 60FPS Render">
+                    <span class="checkbox-content">
+                      <span class="name">4K 60FPS Mastering</span>
+                      <span class="price">+$20</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="15" data-name="Custom Sound Design">
+                    <span class="checkbox-content">
+                      <span class="name">Advanced Sound Design</span>
+                      <span class="price">+$15</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="25" data-name="24h Rush Delivery">
+                    <span class="checkbox-content">
+                      <span class="name">24H Rush Delivery</span>
+                      <span class="price">+$25</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="15" data-name="Thumbnail / Poster">
+                    <span class="checkbox-content">
+                      <span class="name">Click-Magnet Thumbnail</span>
+                      <span class="price">+$15</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calculation Output Box -->
+            <div class="calc-summary glass-panel">
+              <h3>Estimated Investment</h3>
+              <div class="estimate-price-box">
+                <span class="currency">$</span>
+                <span class="total-amount" id="totalEstimate">40</span>
+                <span class="price-note">USD</span>
+              </div>
+              <p class="summary-disclaimer">Approx. <span id="lkrEstimate">රු 12,000 LKR</span> depending on exact client specifications.</p>
+
+              <div class="selected-breakdown" id="selectedBreakdown">
+                <div class="breakdown-row">
+                  <span>Selected Service:</span>
+                  <strong id="summaryService">Gaming Montage</strong>
+                </div>
+                <div class="breakdown-row">
+                  <span>Duration Scale:</span>
+                  <strong id="summaryDuration">3 Minutes</strong>
+                </div>
+                <div class="breakdown-row">
+                  <span>Active Add-ons:</span>
+                  <strong id="summaryAddons">None</strong>
+                </div>
+              </div>
+
+              <!-- Google Sync Status in Estimator -->
+              <div id="estimatorGoogleSyncBadge" class="estimator-google-sync-badge"></div>
+
+              <button type="button" class="btn btn-primary btn-block glow-effect" onclick="proceedWithEstimate()">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Book This Project</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING TIERS -->
+    <section class="section pricing-section" id="pricing">
+      <div class="container">
+        <div class="section-badge">TRANSPARENT RATES</div>
+        <h2 class="section-title">Popular Studio <span class="gradient-text">Packages</span></h2>
+        <p class="section-subtitle">Pick a package that fits your creative stage, from starter creator bundles to complete studio overhauls.</p>
+
+        <div class="pricing-grid">
+          <!-- Tier 1 -->
+          <div class="pricing-card glass-panel">
+            <div class="tier-badge">STARTER</div>
+            <h3 class="tier-title">Creator Kickstart</h3>
+            <p class="tier-description">Ideal for emerging YouTubers, TikTokers, and casual gamers wanting professional polish.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">29</span>
+              <span class="period">/ project</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Up to 5 Min Video Edit</li>
+              <li><i class="fa-solid fa-check"></i> 1080p FHD Quality</li>
+              <li><i class="fa-solid fa-check"></i> Basic Sound Sync &amp; Effects</li>
+              <li><i class="fa-solid fa-check"></i> 1 Custom Thumbnail</li>
+              <li><i class="fa-solid fa-check"></i> 2 Free Revisions</li>
+              <li><i class="fa-solid fa-check"></i> 72 Hours Turnaround</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-block">Choose Starter</a>
+          </div>
+
+          <!-- Tier 2 (Featured) -->
+          <div class="pricing-card glass-panel popular-tier">
+            <div class="popular-ribbon"><i class="fa-solid fa-fire"></i> MOST POPULAR</div>
+            <div class="tier-badge highlight">PRO ESPORTS &amp; MEDIA</div>
+            <h3 class="tier-title">Pro Champion Pack</h3>
+            <p class="tier-description">Engineered for competitive players, streamers, and high-growth channels needing top visuals.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">69</span>
+              <span class="period">/ project</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Up to 12 Min 4K 60FPS Video</li>
+              <li><i class="fa-solid fa-check"></i> Advanced 3D Transitions &amp; Beat-Sync</li>
+              <li><i class="fa-solid fa-check"></i> Premium Custom Sound FX Layering</li>
+              <li><i class="fa-solid fa-check"></i> 2 High CTR Viral Thumbnails</li>
+              <li><i class="fa-solid fa-check"></i> Complete Stream Overlay Pack</li>
+              <li><i class="fa-solid fa-check"></i> Unlimited Minor Revisions</li>
+              <li><i class="fa-solid fa-check"></i> 48 Hours Priority Turnaround</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary btn-block glow-effect">Get Pro Pack</a>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="pricing-card glass-panel">
+            <div class="tier-badge">ENTERPRISE</div>
+            <h3 class="tier-title">Studio Empire Suite</h3>
+            <p class="tier-description">Complete agency-level suite for esports organizations, game developers, and corporate media.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">149</span>
+              <span class="period">/ package</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Full Clan / Brand Identity Suite</li>
+              <li><i class="fa-solid fa-check"></i> Custom 3D Animated Logo Intro (Blender)</li>
+              <li><i class="fa-solid fa-check"></i> Tournament Jersey &amp; Merchandise Vector</li>
+              <li><i class="fa-solid fa-check"></i> Complete Stream Pack &amp; Alerts</li>
+              <li><i class="fa-solid fa-check"></i> Dedicated Account Producer</li>
+              <li><i class="fa-solid fa-check"></i> 24/7 VIP Discord Support</li>
+              <li><i class="fa-solid fa-check"></i> 24-Hour Ultra Rush Available</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-block">Go Enterprise</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="section testimonials-section">
+      <div class="container">
+        <div class="section-badge">TESTIMONIALS</div>
+        <h2 class="section-title">What Our <span class="gradient-text">Clients Say</span></h2>
+        <p class="section-subtitle">Real feedback from gamers, creators, and teams who elevated their game with C4S Studio.</p>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card glass-panel">
+            <div class="quote-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="quote-text">"C4S Studio transformed my Valorant gameplay into an absolute masterpiece. The music sync and 3D camera angles gained my TikTok over 250k views in 3 days!"</p>
+            <div class="user-profile">
+              <div class="user-avatar"><i class="fa-solid fa-gamepad"></i></div>
+              <div>
+                <h5>Kaveesha Perera</h5>
+                <small>Content Creator &amp; Streamer</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card glass-panel">
+            <div class="quote-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="quote-text">"The esports logo and full overlay pack they designed for our competitive clan is legendary. Super fast delivery and the communication was effortless."</p>
+            <div class="user-profile">
+              <div class="user-avatar cyan-box"><i class="fa-solid fa-trophy"></i></div>
+              <div>
+                <h5>Rush Gaming LK</h5>
+                <small>Esports Clan Captain</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card glass-panel">
+            <div class="quote-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="quote-text">"The 3D logo reveal and sound effects were beyond my expectations. C4S Studio definitely brings international quality at very fair rates."</p>
+            <div class="user-profile">
+              <div class="user-avatar amber-box"><i class="fa-solid fa-clapperboard"></i></div>
+              <div>
+                <h5>Danushka Silva</h5>
+                <small>YouTube Tech Reviewer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="section faq-section">
+      <div class="container faq-container">
+        <div class="section-badge">FAQ</div>
+        <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <p class="section-subtitle">Got questions? We've got answers. If you need anything else, feel free to drop a message!</p>
+
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>How do I send my gameplay footage or project files?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>You can upload your raw footage or clips directly to Google Drive, Dropbox, OneDrive, or WeTransfer and share the link with us. We handle 1080p, 1440p, and 4K uncompressed footage seamlessly.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>What software does C4S Studio use?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>We work with industry-standard suites including Adobe Premiere Pro, Adobe After Effects, DaVinci Resolve Studio for color grading, Blender &amp; Unreal Engine 5 for 3D modeling and rendering, and Photoshop/Illustrator for vector graphics.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>How long does a typical project take?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>Standard delivery is usually 24 to 72 hours depending on the scale and complexity of the project. We also offer 24h Express Rush delivery if you have an urgent deadline.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>What payment methods do you accept?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>We accept Sri Lankan local bank transfers (Sampath, Commercial, BOC, Frimi), PayPal, Payoneer, Crypto (USDT), and major debit/credit cards.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>Can I request revisions if I need changes?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>Yes, absolutely! Client satisfaction is our #1 priority. We offer revision cycles with all packages until your video or design looks exactly the way you envisioned.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Contact Info -->
+          <div class="contact-info-panel glass-panel">
+            <div class="section-badge">LET'S COLLABORATE</div>
+            <h2 class="section-title">Ready to Elevate <br><span class="gradient-text">Your Content?</span></h2>
+            <p>Send us your project details, raw clips, or ideas. We'll get back to you with a free consultation and project timeline within hours.</p>
+
+            <div class="contact-methods">
+              <div class="method-item">
+                <div class="method-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                  <small>Email Us</small>
+                  <h4>contact@c4sstudio.com</h4>
+                </div>
+              </div>
+
+              <div class="method-item">
+                <div class="method-icon cyan-box"><i class="fa-brands fa-whatsapp"></i></div>
+                <div>
+                  <small>WhatsApp Direct Chat</small>
+                  <h4>+94 7X XXX XXXX</h4>
+                </div>
+              </div>
+
+              <div class="method-item">
+                <div class="method-icon amber-box"><i class="fa-brands fa-discord"></i></div>
+                <div>
+                  <small>Discord Community</small>
+                  <h4>discord.gg/c4sstudio</h4>
+                </div>
+              </div>
+
+              <div class="method-item">
+                <div class="method-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div>
+                  <small>Headquarters</small>
+                  <h4>Colombo, Sri Lanka (Serving Worldwide)</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social links -->
+            <div class="social-links-row">
+              <a href="https://youtube.com" target="_blank" rel="noopener" class="social-icon" title="YouTube" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="https://discord.com" target="_blank" rel="noopener" class="social-icon" title="Discord" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-icon" title="TikTok" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+              <a href="https://github.com" target="_blank" rel="noopener" class="social-icon" title="GitHub" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-form-panel glass-panel">
+            <h3 class="form-title">Send a Message</h3>
+            <p class="form-subtitle">Fill out the quick form below to request a quote or book a slot.</p>
+
+            <form id="contactForm" onsubmit="handleContactSubmit(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Your Name / Creator Tag *</label>
+                  <input type="text" id="name" required placeholder="e.g. Chulitha / CyberGamer" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address *</label>
+                  <input type="email" id="email" required placeholder="yourname@gmail.com" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contactService">Service Required</label>
+                  <select id="contactService" class="form-control">
+                    <option value="Gaming Montage">Gaming Montage / Highlight</option>
+                    <option value="Cinematic Video Editing">Cinematic Video Editing</option>
+                    <option value="Stream Pack &amp; Overlays">Stream Pack &amp; Overlays</option>
+                    <option value="3D Logo &amp; Animation">3D Logo &amp; Intro Animation</option>
+                    <option value="Esports Clan Branding">Esports Clan Branding</option>
+                    <option value="Custom Project">Other / Custom Request</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="budget">Target Budget</label>
+                  <select id="budget" class="form-control">
+                    <option value="$25 - $50">$25 - $50</option>
+                    <option value="$50 - $100" selected>$50 - $100</option>
+                    <option value="$100 - $250">$100 - $250</option>
+                    <option value="$250+">$250+</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Project Details &amp; Footage Links *</label>
+                <textarea id="message" rows="4" required placeholder="Tell us about your vision, music preference, reference links, Google Drive footage link, etc..." class="form-control"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-block glow-effect">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>Transmit Inquiry</span>
+                </button>
+              </div>
+            </form>
+
+            <div class="form-success-message" id="formSuccessMessage">
+              <i class="fa-solid fa-circle-check success-icon"></i>
+              <h4>Inquiry Received!</h4>
+              <p>Thank you for reaching out to C4S Studio. Our creative team will review your project and get in touch within 2-4 hours.</p>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="resetContactForm()">Send Another Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#hero" class="brand-logo">
+            <span class="logo-badge">C4S</span>
+            <span class="logo-text">STUDIO<span class="dot">.</span></span>
+          </a>
+          <p>Next-generation creative &amp; gaming multimedia studio. Elevating visual storytelling and competitive gaming aesthetics worldwide.</p>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About Studio</a></li>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#portfolio">Featured Works</a></li>
+            <li><a href="#gallery">Photo &amp; Video Gallery</a></li>
+            <li><a href="admin.html"><i class="fa-solid fa-shield-halved"></i> Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Specialties</h5>
+          <ul>
+            <li><a href="#services">Gaming Montages</a></li>
+            <li><a href="#services">Cinematic Video VFX</a></li>
+            <li><a href="#services">Stream Overlays</a></li>
+            <li><a href="#calculator">Price Estimator</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Direct Contact</h5>
+          <p class="footer-contact-item"><i class="fa-solid fa-envelope"></i> chulitharv123@gmail.com</p>
+          <p class="footer-contact-item"><i class="fa-solid fa-clock"></i> 24/7 Creative Availability</p>
+          <p class="footer-contact-item"><i class="fa-solid fa-shield-halved"></i> 100% Quality Guaranteed</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 C4S Studio. All rights reserved. Crafted with passion for Gamers &amp; Creators.</p>
+        <div class="footer-legal">
+          <a href="#hero">Privacy Policy</a>
+          <span>•</span>
+          <a href="#hero">Terms of Service</a>
+          <span>•</span>
+          <a href="#hero">Back to Top ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL VIEWER FOR PORTFOLIO ITEMS -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-container glass-panel">
+      <button type="button" class="modal-close" aria-label="Close Project Modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamically injected via script.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-bell toast-icon"></i>
+    <span id="toastMessage">Notification message</span>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module" src="firebase-init.js"></script>
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
