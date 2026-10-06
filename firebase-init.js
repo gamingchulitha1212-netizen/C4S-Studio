@@ -23,12 +23,12 @@ import {
 // Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCAR-h67q3M8-7cRB5mOcY9KqJYeShWonU",
-  authDomain: "mr-gaming-c4s-website.firebaseapp.com",
-  projectId: "mr-gaming-c4s-website",
-  storageBucket: "mr-gaming-c4s-website.firebasestorage.app",
-  messagingSenderId: "310015601996",
-  appId: "1:310015601996:web:3533dc2ea5fa60d7fc33e9",
-  measurementId: "G-QPMRKCRMQY"
+  authDomain: "http://c4s-studio.firebaseapp.com",
+  projectId: "c4s-studio",
+  storageBucket: "c4s-studio.firebasestorage.app",
+  messagingSenderId: "199863379407",
+  appId: "1:199863379407:web:3c61416efa100b08685eba",
+  measurementId: "G-LT0K2EBBYD"
 };
 
 const app       = initializeApp(firebaseConfig);
