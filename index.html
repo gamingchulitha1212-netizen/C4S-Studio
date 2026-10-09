@@ -20,6 +20,15 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Import Map for ES Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@vercel/analytics": "./node_modules/@vercel/analytics/dist/index.mjs"
+      }
+    }
+  </script>
 </head>
 <body>
   <!-- Ambient background glow elements -->
@@ -1103,6 +1112,8 @@
     <span id="toastMessage">Notification message</span>
   </div>
 
+  <!-- Vercel Web Analytics -->
+  <script type="module" src="analytics.js"></script>
   <!-- Firebase SDK -->
   <script type="module" src="firebase-init.js"></script>
   <!-- Script -->

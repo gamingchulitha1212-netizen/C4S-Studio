@@ -17,6 +17,15 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <!-- Import Map for ES Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@vercel/analytics": "./node_modules/@vercel/analytics/dist/index.mjs"
+      }
+    }
+  </script>
+
   <style>
     :root {
       --bg-dark: #070913;
@@ -1179,6 +1188,9 @@ service cloud.firestore {
 
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Vercel Web Analytics -->
+  <script type="module" src="analytics.js"></script>
 
   <!-- Firebase Scripts (ES Module) -->
   <script type="module">
