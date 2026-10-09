@@ -1,0 +1,31 @@
+{
+  "name": "c4s-studio",
+  "version": "1.0.0",
+  "description": "C4S Studio - Next-Gen Gaming, Media & Creative Digital Studio",
+  "main": "firebase-init.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamingchulitha1212-netizen/C4S-Studio-.git"
+  },
+  "keywords": [
+    "gaming",
+    "creative-studio",
+    "video-editing",
+    "3d-animation",
+    "esports"
+  ],
+  "author": "C4S Studio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gamingchulitha1212-netizen/C4S-Studio-/issues"
+  },
+  "homepage": "https://github.com/gamingchulitha1212-netizen/C4S-Studio-#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
