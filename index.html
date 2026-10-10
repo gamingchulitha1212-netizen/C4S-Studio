@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4S STUDIO | Photography &amp; Videography</title>
+  <meta name="description" content="C4S Studio is a photography and videography studio: portraits, weddings, events, commercial shoots, cinematic video and professional editing.">
+  <meta name="keywords" content="C4S Studio, Photography, Videography, Wedding Photography, Event Coverage, Video Editing, Sri Lanka">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22 font-weight=%22900%22 fill=%22%238b5cf6%22>C4S</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Interactive Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="site-header" id="header">
+    <div class="header-container">
+      <a href="#hero" class="brand-logo">
+        <span class="logo-badge">C4S</span>
+        <span class="logo-text">STUDIO<span class="dot">.</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+          <li><a href="#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="#calculator" class="nav-link">Estimator</a></li>
+          <li><a href="#pricing" class="nav-link">Pricing</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button type="button" id="audioToggle" class="icon-btn" title="Toggle Sound Effects" aria-label="Toggle sound">
+          <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+        </button>
+        <!-- Google Auth Header Widget -->
+        <div id="headerAuthContainer" class="header-auth-container"></div>
+        <a href="#contact" class="btn btn-sm btn-primary glow-effect">
+          <span>Start Project</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <span class="logo-badge">C4S</span>
+        <span class="logo-text">STUDIO<span class="dot">.</span></span>
+      </div>
+      <button type="button" class="drawer-close" id="drawerClose" aria-label="Close Navigation Menu"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <!-- Mobile Google Auth Area -->
+    <div id="mobileAuthContainer" class="mobile-auth-container"></div>
+    <ul class="mobile-nav-list">
+      <li><a href="#hero" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="#about" class="mobile-nav-link"><i class="fa-solid fa-user-astronaut"></i> About Us</a></li>
+      <li><a href="#services" class="mobile-nav-link"><i class="fa-solid fa-layer-group"></i> Services</a></li>
+      <li><a href="#portfolio" class="mobile-nav-link"><i class="fa-solid fa-gamepad"></i> Portfolio</a></li>
+      <li><a href="#gallery" class="mobile-nav-link"><i class="fa-solid fa-images"></i> Gallery</a></li>
+      <li><a href="#calculator" class="mobile-nav-link"><i class="fa-solid fa-calculator"></i> Price Estimator</a></li>
+      <li><a href="#pricing" class="mobile-nav-link"><i class="fa-solid fa-tag"></i> Packages</a></li>
+      <li><a href="#contact" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="#contact" class="btn btn-primary btn-block">Get a Quote</a>
+      <div class="social-pills">
+        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-indicator"></span>
+            <span class="badge-text">PHOTOGRAPHY &amp; VIDEOGRAPHY STUDIO</span>
+          </div>
+
+          <h1 class="hero-title">
+            WE CAPTURE <br>
+            <span class="gradient-text glitch-effect" data-text="EVERY MOMENT">EVERY MOMENT</span> <br>
+            <span class="highlight-cyan">IN STILLS &amp; MOTION</span>
+          </h1>
+
+          <p class="hero-description">
+            Welcome to <strong>C4S Studio</strong>. We shoot and edit photos and videos for portraits, weddings, events and brands, with a cinematic eye for every frame.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#portfolio" class="btn btn-primary glow-effect">
+              <i class="fa-solid fa-play"></i>
+              <span>Explore Creations</span>
+            </a>
+            <a href="#calculator" class="btn btn-secondary">
+              <i class="fa-solid fa-calculator"></i>
+              <span>Cost Estimator</span>
+            </a>
+          </div>
+
+          <!-- Trust &amp; Stats bar -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number" data-count="120">0</span><span class="stat-plus">+</span>
+              <span class="stat-label">Projects Completed</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="50">0</span><span class="stat-plus">K+</span>
+              <span class="stat-label">Happy Community</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="99">0</span><span class="stat-plus">%</span>
+              <span class="stat-label">Satisfaction Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="cube-card-wrapper">
+            <div class="studio-card-3d">
+              <div class="card-inner">
+                <div class="card-header-status">
+                  <div class="status-tag live">
+                    <span class="live-dot"></span> STUDIO LIVE
+                  </div>
+                  <div class="tech-specs">
+                    <span>4K VIDEO</span>
+                    <span>RAW PHOTO</span>
+                  </div>
+                </div>
+
+                <div class="center-emblem">
+                  <div class="emblem-ring ring-1"></div>
+                  <div class="emblem-ring ring-2"></div>
+                  <div class="emblem-core">
+                    <i class="fa-solid fa-camera-retro emblem-icon"></i>
+                  </div>
+                </div>
+
+                <div class="card-feature-list">
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-video"></i> Cinematic Video
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-camera"></i> Photography
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-plane"></i> Drone Aerials
+                  </div>
+                  <div class="feature-chip">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Photo &amp; Video Editing
+                  </div>
+                </div>
+
+                <div class="card-footer-quote">
+                  <p>"Every frame, a story worth keeping."</p>
+                  <small>— C4S Studio Crew</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHT TICKER -->
+    <div class="marquee-strip">
+      <div class="marquee-track">
+        <span>📸 PHOTOGRAPHY</span>
+        <span>•</span>
+        <span>🎬 VIDEOGRAPHY</span>
+        <span>•</span>
+        <span>💍 WEDDINGS &amp; EVENTS</span>
+        <span>•</span>
+        <span>🚁 DRONE AERIALS</span>
+        <span>•</span>
+        <span>🎞️ CINEMATIC EDITING</span>
+        <span>•</span>
+        <span>🎨 COLOR GRADING &amp; RETOUCHING</span>
+        <span>•</span>
+        <span>🛍️ COMMERCIAL &amp; PRODUCT SHOOTS</span>
+        <span>•</span>
+        <!-- Duplicated for continuous loop -->
+        <span>📸 PHOTOGRAPHY</span>
+        <span>•</span>
+        <span>🎬 VIDEOGRAPHY</span>
+        <span>•</span>
+        <span>💍 WEDDINGS &amp; EVENTS</span>
+        <span>•</span>
+        <span>🚁 DRONE AERIALS</span>
+        <span>•</span>
+        <span>🎞️ CINEMATIC EDITING</span>
+        <span>•</span>
+        <span>🎨 COLOR GRADING &amp; RETOUCHING</span>
+        <span>•</span>
+        <span>🛍️ COMMERCIAL &amp; PRODUCT SHOOTS</span>
+        <span>•</span>
+      </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <section class="section about-section" id="about">
+      <div class="container">
+        <div class="section-badge">ABOUT C4S STUDIO</div>
+        <h2 class="section-title">Stories Told Through <span class="gradient-text">Lens &amp; Motion</span></h2>
+        <p class="section-subtitle">We combine a creative eye with professional gear and careful editing to produce photos and videos that people, families and brands are proud to share.</p>
+
+        <!-- Pillars -->
+        <div class="about-pillars">
+          <div class="about-card glass-panel">
+            <div class="card-icon-box">
+              <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h3>Our Mission</h3>
+            <p>Turn important moments and brand stories into photos and films that stay sharp and meaningful for years.</p>
+          </div>
+
+          <div class="about-card glass-panel">
+            <div class="card-icon-box cyan-box">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3>Reliable Delivery</h3>
+            <p>Clear timelines and polished, ready-to-share files, without compromising on quality.</p>
+          </div>
+
+          <div class="about-card glass-panel">
+            <div class="card-icon-box amber-box">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3>A Look That Is Yours</h3>
+            <p>Every project gets its own composition, lighting, color grade and edit, tailored to your story.</p>
+          </div>
+        </div>
+
+        <!-- Experience timeline / highlights -->
+        <div class="studio-values glass-panel">
+          <div class="value-item">
+            <div class="value-number">01</div>
+            <div class="value-info">
+              <h4>Plan &amp; Brief</h4>
+              <p>We talk through your idea, location, style and schedule.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">02</div>
+            <div class="value-info">
+              <h4>Shoot</h4>
+              <p>Photos and video captured with professional cameras, lenses and lighting.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">03</div>
+            <div class="value-info">
+              <h4>Edit &amp; Review</h4>
+              <p>Retouching, color grading and cutting, then your feedback and revisions.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-number">04</div>
+            <div class="value-info">
+              <h4>Deliver</h4>
+              <p>Final photos and videos delivered online, ready for print, social media and web.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="section services-section" id="services">
+      <div class="container">
+        <div class="section-badge">SERVICES WE PROVIDE</div>
+        <h2 class="section-title">Photo &amp; Video <span class="gradient-text">Services</span></h2>
+        <p class="section-subtitle">From a single portrait session to full wedding and event coverage, we handle the shoot and the edit.</p>
+
+        <div class="services-grid">
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon "><i class="fa-solid fa-camera"></i></div>
+              <span class="service-num">01</span>
+            </div>
+            <h3 class="service-title">Photography</h3>
+            <p class="service-desc">Portraits, couples, family sessions and product photography with careful lighting and natural direction.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Studio &amp; Outdoor Sessions</li>
+              <li><i class="fa-solid fa-check"></i> Professional Retouching</li>
+              <li><i class="fa-solid fa-check"></i> Print &amp; Social-Ready Files</li>
+            </ul>
+          </div>
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon cyan-box"><i class="fa-solid fa-video"></i></div>
+              <span class="service-num">02</span>
+            </div>
+            <h3 class="service-title">Videography</h3>
+            <p class="service-desc">Story-driven video shoots for events, brands and personal projects, shot in crisp 4K.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> 4K Cinematic Footage</li>
+              <li><i class="fa-solid fa-check"></i> Clean Audio Capture</li>
+              <li><i class="fa-solid fa-check"></i> Highlight &amp; Full-Length Edits</li>
+            </ul>
+          </div>
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon amber-box"><i class="fa-solid fa-ring"></i></div>
+              <span class="service-num">03</span>
+            </div>
+            <h3 class="service-title">Wedding &amp; Event Coverage</h3>
+            <p class="service-desc">Full-day photo and video coverage of weddings, birthdays, engagements and corporate events.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Candid &amp; Posed Moments</li>
+              <li><i class="fa-solid fa-check"></i> Multi-Camera Coverage</li>
+              <li><i class="fa-solid fa-check"></i> Highlight Reel Delivery</li>
+            </ul>
+          </div>
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon "><i class="fa-solid fa-plane"></i></div>
+              <span class="service-num">04</span>
+            </div>
+            <h3 class="service-title">Drone Aerials</h3>
+            <p class="service-desc">Sweeping aerial photos and footage for venues, property, events and travel stories.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> 4K Aerial Video</li>
+              <li><i class="fa-solid fa-check"></i> High-Resolution Aerial Stills</li>
+              <li><i class="fa-solid fa-check"></i> Smooth Cinematic Movement</li>
+            </ul>
+          </div>
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon cyan-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <span class="service-num">05</span>
+            </div>
+            <h3 class="service-title">Editing &amp; Color Grading</h3>
+            <p class="service-desc">Professional photo retouching and video editing, with consistent color for a finished look.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Skin &amp; Detail Retouching</li>
+              <li><i class="fa-solid fa-check"></i> Cinematic Color Grades</li>
+              <li><i class="fa-solid fa-check"></i> Music &amp; Motion Titles</li>
+            </ul>
+          </div>
+          <div class="service-card glass-panel">
+            <div class="service-header">
+              <div class="service-icon amber-box"><i class="fa-solid fa-bag-shopping"></i></div>
+              <span class="service-num">06</span>
+            </div>
+            <h3 class="service-title">Commercial &amp; Product Shoots</h3>
+            <p class="service-desc">Clean, eye-catching photos and videos for products, restaurants, fashion and local businesses.</p>
+            <ul class="service-points">
+              <li><i class="fa-solid fa-check"></i> Product &amp; Lifestyle Shots</li>
+              <li><i class="fa-solid fa-check"></i> Short Social Video Ads</li>
+              <li><i class="fa-solid fa-check"></i> Brand-Consistent Styling</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO SECTION -->
+    <section class="section portfolio-section" id="portfolio">
+      <div class="container">
+        <div class="section-badge">CREATIVE SHOWCASE</div>
+        <h2 class="section-title">Featured <span class="gradient-text">Projects</span></h2>
+        <p class="section-subtitle">A look at the kinds of photo and video projects we shoot at C4S Studio.</p>
+
+        <!-- Category Filters -->
+        <div class="portfolio-filters" id="portfolioFilters">
+          <button type="button" class="filter-btn active" data-filter="all">All Works</button>
+          <button type="button" class="filter-btn" data-filter="photo">Photography</button>
+          <button type="button" class="filter-btn" data-filter="video">Videography</button>
+          <button type="button" class="filter-btn" data-filter="commercial">Commercial</button>
+        </div>
+        <div class="portfolio-grid" id="portfolioGrid">
+          <div class="portfolio-card" data-category="photo" onclick="openModal('wedding-film')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-1">
+                <i class="fa-solid fa-ring card-bg-icon"></i>
+                <div class="preview-badge">WEDDING STORY</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Wedding</span>
+                <span class="tag">Photo + Video</span>
+              </div>
+              <h4>Wedding Highlights</h4>
+              <p>A cinematic wedding story told through candid photos and a highlight film.</p>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="photo" onclick="openModal('portrait-session')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-2">
+                <i class="fa-solid fa-camera-retro card-bg-icon"></i>
+                <div class="preview-badge">PORTRAIT SESSION</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Portrait</span>
+                <span class="tag">Photography</span>
+              </div>
+              <h4>Golden Hour Portraits</h4>
+              <p>Natural-light portraits with soft color and relaxed direction.</p>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="commercial" onclick="openModal('product-shoot')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-3">
+                <i class="fa-solid fa-bag-shopping card-bg-icon"></i>
+                <div class="preview-badge">PRODUCT SHOOT</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Commercial</span>
+                <span class="tag">Product</span>
+              </div>
+              <h4>Product &amp; Lifestyle Shoot</h4>
+              <p>Clean, detailed product visuals for brands and online stores.</p>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="video" onclick="openModal('event-coverage')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-4">
+                <i class="fa-solid fa-champagne-glasses card-bg-icon"></i>
+                <div class="preview-badge">EVENT COVERAGE</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Event</span>
+                <span class="tag">Video</span>
+              </div>
+              <h4>Event Highlight Reel</h4>
+              <p>Fast-paced event recap with crisp 4K footage and music-driven edits.</p>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="video" onclick="openModal('drone-aerial')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-5">
+                <i class="fa-solid fa-plane card-bg-icon"></i>
+                <div class="preview-badge">DRONE AERIAL</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Drone</span>
+                <span class="tag">Cinematic</span>
+              </div>
+              <h4>Aerial Landscape Film</h4>
+              <p>Sweeping aerial shots with a smooth, cinematic color grade.</p>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="commercial" onclick="openModal('brand-reel')">
+            <div class="portfolio-thumb">
+              <div class="card-bg-gradient grad-6">
+                <i class="fa-solid fa-clapperboard card-bg-icon"></i>
+                <div class="preview-badge">BRAND FILM</div>
+              </div>
+              <div class="card-hover-overlay">
+                <span class="preview-btn"><i class="fa-solid fa-eye"></i> View Project</span>
+              </div>
+            </div>
+            <div class="portfolio-info">
+              <div class="portfolio-tags">
+                <span class="tag">Commercial</span>
+                <span class="tag">Video</span>
+              </div>
+              <h4>Brand Promo Reel</h4>
+              <p>Short promotional video that shows what a business is about.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="section gallery-section" id="gallery">
+      <div class="container">
+        <div class="section-badge">PHOTO &amp; VIDEO GALLERY</div>
+        <h2 class="section-title">Our <span class="gradient-text">Gallery</span></h2>
+        <p class="section-subtitle">Real work captured from our studio — photos, videos, and creative moments that define C4S Studio.</p>
+
+        <!-- Gallery Filter Tabs -->
+        <div class="gallery-filter-tabs" id="galleryFilterTabs">
+          <button type="button" class="gallery-tab active" data-gfilter="all"><i class="fa-solid fa-border-all"></i> All</button>
+          <button type="button" class="gallery-tab" data-gfilter="photo"><i class="fa-solid fa-image"></i> Photos</button>
+          <button type="button" class="gallery-tab" data-gfilter="video"><i class="fa-solid fa-film"></i> Videos</button>
+          <button type="button" class="gallery-tab" data-gfilter="bts"><i class="fa-solid fa-clapperboard"></i> BTS</button>
+          <button type="button" class="gallery-tab" data-gfilter="wedding"><i class="fa-solid fa-ring"></i> Weddings</button>
+          <button type="button" class="gallery-tab" data-gfilter="event"><i class="fa-solid fa-champagne-glasses"></i> Events</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="gallery-loading" id="galleryLoading">
+            <div class="gallery-spinner"></div>
+            <p>Loading gallery...</p>
+          </div>
+        </div>
+
+        <!-- Gallery Empty State -->
+        <div class="gallery-empty" id="galleryEmpty" style="display:none;">
+          <i class="fa-solid fa-images"></i>
+          <h3>No Items Yet</h3>
+          <p>The gallery is being populated. Check back soon!</p>
+          <div id="galleryLoginPrompt"></div>
+        </div>
+
+        <!-- Gallery Lightbox -->
+        <div class="gallery-lightbox" id="galleryLightbox">
+          <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+          <div class="lightbox-container">
+            <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close Lightbox"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous Media"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="lightbox-media" id="lightboxMedia"></div>
+            <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next Media"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="lightbox-info" id="lightboxInfo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE PROJECT COST ESTIMATOR -->
+    <section class="section calculator-section" id="calculator">
+      <div class="container">
+        <div class="calculator-wrapper glass-panel">
+          <div class="calc-header">
+            <div class="section-badge">INTERACTIVE TOOL</div>
+            <h2 class="section-title">Instant <span class="gradient-text">Project Estimator</span></h2>
+            <p class="section-subtitle">Select what you need and get an immediate budget approximation for your dream project.</p>
+          </div>
+
+          <div class="calc-grid">
+            <div class="calc-options">
+              <!-- Service Type -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-bolt"></i> Primary Service Needed</label>
+                <div class="chip-options" id="serviceOptions">
+                  <button type="button" class="calc-chip active" data-cost="25" data-service="Photo Session">Photo Session ($25+)</button>
+                  <button type="button" class="calc-chip" data-cost="40" data-service="Video Shoot &amp; Edit">Video Shoot &amp; Edit ($40+)</button>
+                  <button type="button" class="calc-chip" data-cost="50" data-service="Event Coverage">Event Coverage ($50+)</button>
+                  <button type="button" class="calc-chip" data-cost="75" data-service="Wedding Package">Wedding Package ($75+)</button>
+                  <button type="button" class="calc-chip" data-cost="100" data-service="Commercial Shoot">Commercial Shoot ($100+)</button>
+                </div>
+              </div>
+
+              <!-- Quality & Length -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-clock"></i> Coverage Duration</label>
+                <div class="range-container">
+                  <input type="range" min="1" max="15" value="3" class="custom-slider" id="durationSlider">
+                  <div class="range-display">
+                    <span id="durationValue">3</span> <span id="durationUnit">Hours</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add-ons -->
+              <div class="calc-group">
+                <label class="calc-label"><i class="fa-solid fa-plus-circle"></i> Premium Add-ons</label>
+                <div class="addons-grid">
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="20" data-name="4K Video Delivery">
+                    <span class="checkbox-content">
+                      <span class="name">4K Video Delivery</span>
+                      <span class="price">+$20</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="15" data-name="Advanced Retouching">
+                    <span class="checkbox-content">
+                      <span class="name">Advanced Retouching</span>
+                      <span class="price">+$15</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="25" data-name="24h Rush Delivery">
+                    <span class="checkbox-content">
+                      <span class="name">24H Rush Delivery</span>
+                      <span class="price">+$25</span>
+                    </span>
+                  </label>
+                  <label class="checkbox-card">
+                    <input type="checkbox" class="addon-checkbox" value="15" data-name="Drone Aerial Coverage">
+                    <span class="checkbox-content">
+                      <span class="name">Drone Aerial Coverage</span>
+                      <span class="price">+$15</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calculation Output Box -->
+            <div class="calc-summary glass-panel">
+              <h3>Estimated Investment</h3>
+              <div class="estimate-price-box">
+                <span class="currency">$</span>
+                <span class="total-amount" id="totalEstimate">40</span>
+                <span class="price-note">USD</span>
+              </div>
+              <p class="summary-disclaimer">Approx. <span id="lkrEstimate">රු 12,000 LKR</span> depending on exact client specifications.</p>
+
+              <div class="selected-breakdown" id="selectedBreakdown">
+                <div class="breakdown-row">
+                  <span>Selected Service:</span>
+                  <strong id="summaryService">Photo Session</strong>
+                </div>
+                <div class="breakdown-row">
+                  <span>Duration Scale:</span>
+                  <strong id="summaryDuration">3 Hours</strong>
+                </div>
+                <div class="breakdown-row">
+                  <span>Active Add-ons:</span>
+                  <strong id="summaryAddons">None</strong>
+                </div>
+              </div>
+
+              <!-- Google Sync Status in Estimator -->
+              <div id="estimatorGoogleSyncBadge" class="estimator-google-sync-badge"></div>
+
+              <button type="button" class="btn btn-primary btn-block glow-effect" onclick="proceedWithEstimate()">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Book This Project</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING TIERS -->
+    <section class="section pricing-section" id="pricing">
+      <div class="container">
+        <div class="section-badge">TRANSPARENT RATES</div>
+        <h2 class="section-title">Popular Studio <span class="gradient-text">Packages</span></h2>
+        <p class="section-subtitle">Pick a package that fits your occasion, from a single photo session to full-day coverage.</p>
+
+        <div class="pricing-grid">
+          <div class="pricing-card glass-panel">
+            <div class="tier-badge ">STARTER</div>
+            <h3 class="tier-title">Photo Starter</h3>
+            <p class="tier-description">A simple session for portraits, couples or families.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">29</span>
+              <span class="period">/ session</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Up to 1 Hour Photo Session</li>
+              <li><i class="fa-solid fa-check"></i> 20 Professionally Edited Photos</li>
+              <li><i class="fa-solid fa-check"></i> High-Resolution Digital Files</li>
+              <li><i class="fa-solid fa-check"></i> Online Gallery Delivery</li>
+              <li><i class="fa-solid fa-check"></i> 1 Round of Revisions</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-block">Choose Starter</a>
+          </div>
+          <div class="pricing-card glass-panel popular-tier">
+            <div class="popular-ribbon"><i class="fa-solid fa-fire"></i> MOST POPULAR</div>
+            <div class="tier-badge highlight">PHOTO &amp; VIDEO</div>
+            <h3 class="tier-title">Photo + Video Pack</h3>
+            <p class="tier-description">For events and milestones that deserve both photos and a highlight film.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">69</span>
+              <span class="period">/ project</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Up to 3 Hours Coverage</li>
+              <li><i class="fa-solid fa-check"></i> 50 Edited Photos</li>
+              <li><i class="fa-solid fa-check"></i> 2-3 Min 4K Highlight Video</li>
+              <li><i class="fa-solid fa-check"></i> Color Grading &amp; Music</li>
+              <li><i class="fa-solid fa-check"></i> Online Gallery Delivery</li>
+              <li><i class="fa-solid fa-check"></i> Unlimited Minor Revisions</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary glow-effect btn-block">Get Photo + Video</a>
+          </div>
+          <div class="pricing-card glass-panel">
+            <div class="tier-badge ">FULL COVERAGE</div>
+            <h3 class="tier-title">Full Day Coverage</h3>
+            <p class="tier-description">Complete photo and video coverage for weddings and large events.</p>
+            <div class="tier-price">
+              <span class="currency">$</span>
+              <span class="amount">149</span>
+              <span class="period">/ package</span>
+            </div>
+            <ul class="tier-features">
+              <li><i class="fa-solid fa-check"></i> Full-Day Photo &amp; Video Coverage</li>
+              <li><i class="fa-solid fa-check"></i> Second Shooter Available</li>
+              <li><i class="fa-solid fa-check"></i> Cinematic Highlight Film</li>
+              <li><i class="fa-solid fa-check"></i> Drone Aerial Footage</li>
+              <li><i class="fa-solid fa-check"></i> Full Edited Photo Gallery</li>
+              <li><i class="fa-solid fa-check"></i> Priority Editing</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-block">Book Full Coverage</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- FAQ SECTION -->
+    <section class="section faq-section">
+      <div class="container faq-container">
+        <div class="section-badge">FAQ</div>
+        <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <p class="section-subtitle">Got questions? We've got answers. If you need anything else, feel free to drop a message!</p>
+
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>How will I receive my photos and videos?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>Finished photos and videos are delivered through an online gallery or a download link (Google Drive, Dropbox or similar), so you can save them in full quality.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>What equipment and software does C4S Studio use?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>We shoot with professional cameras, lenses and lighting, and edit with industry-standard tools such as Adobe Lightroom, Photoshop, Premiere Pro and DaVinci Resolve for color grading.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>How long does a typical project take?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>Standard delivery is usually 24 to 72 hours depending on the scale and complexity of the project. We also offer 24h Express Rush delivery if you have an urgent deadline.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>What payment methods do you accept?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>We accept Sri Lankan local bank transfers (Sampath, Commercial, BOC, Frimi), PayPal, Payoneer, Crypto (USDT), and major debit/credit cards.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item glass-panel">
+            <button type="button" class="accordion-header">
+              <span>Can I request revisions if I need changes?</span>
+              <i class="fa-solid fa-chevron-down acc-icon"></i>
+            </button>
+            <div class="accordion-content">
+              <p>Yes, absolutely! Client satisfaction is our #1 priority. We offer revision cycles with all packages until your video or design looks exactly the way you envisioned.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Contact Info -->
+          <div class="contact-info-panel glass-panel">
+            <div class="section-badge">LET'S COLLABORATE</div>
+            <h2 class="section-title">Ready to Capture <br><span class="gradient-text">Your Story?</span></h2>
+            <p>Tell us about your event, shoot or idea. We'll get back to you with a free consultation and a clear timeline.</p>
+
+            <div class="contact-methods">
+              <div class="method-item">
+                <div class="method-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                  <small>Email Us</small>
+                  <h4>contact@c4sstudio.com</h4>
+                </div>
+              </div>
+
+              <div class="method-item">
+                <div class="method-icon cyan-box"><i class="fa-brands fa-whatsapp"></i></div>
+                <div>
+                  <small>WhatsApp Direct Chat</small>
+                  <h4>+94 7X XXX XXXX</h4>
+                </div>
+              </div>
+
+              <div class="method-item">
+                <div class="method-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div>
+                  <small>Headquarters</small>
+                  <h4>Colombo, Sri Lanka (Serving Worldwide)</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social links -->
+            <div class="social-links-row">
+              <a href="https://youtube.com" target="_blank" rel="noopener" class="social-icon" title="YouTube" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-icon" title="TikTok" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon" title="Facebook" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-form-panel glass-panel">
+            <h3 class="form-title">Send a Message</h3>
+            <p class="form-subtitle">Fill out the quick form below to request a quote or book a slot.</p>
+
+            <form id="contactForm" onsubmit="handleContactSubmit(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Your Name *</label>
+                  <input type="text" id="name" required placeholder="e.g. Your full name" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address *</label>
+                  <input type="email" id="email" required placeholder="yourname@gmail.com" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contactService">Service Required</label>
+                  <select id="contactService" class="form-control">
+                    <option value="Photography Session">Photography Session</option>
+                    <option value="Videography">Videography</option>
+                    <option value="Wedding Coverage">Wedding Coverage</option>
+                    <option value="Event Coverage">Event Coverage</option>
+                    <option value="Commercial Shoot">Commercial / Product Shoot</option>
+                    <option value="Editing Only">Photo / Video Editing Only</option>
+                    <option value="Custom Project">Other / Custom Request</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="budget">Target Budget</label>
+                  <select id="budget" class="form-control">
+                    <option value="$25 - $50">$25 - $50</option>
+                    <option value="$50 - $100" selected>$50 - $100</option>
+                    <option value="$100 - $250">$100 - $250</option>
+                    <option value="$250+">$250+</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Project Details *</label>
+                <textarea id="message" rows="4" required placeholder="Tell us about your event or shoot: date, location, style and any reference links..." class="form-control"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-block glow-effect">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>Transmit Inquiry</span>
+                </button>
+              </div>
+            </form>
+
+            <div class="form-success-message" id="formSuccessMessage">
+              <i class="fa-solid fa-circle-check success-icon"></i>
+              <h4>Inquiry Received!</h4>
+              <p>Thank you for reaching out to C4S Studio. Our creative team will review your project and get in touch within 2-4 hours.</p>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="resetContactForm()">Send Another Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#hero" class="brand-logo">
+            <span class="logo-badge">C4S</span>
+            <span class="logo-text">STUDIO<span class="dot">.</span></span>
+          </a>
+          <p>Photography and videography studio. Capturing moments and telling stories in stills and motion.</p>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About Studio</a></li>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#portfolio">Featured Works</a></li>
+            <li><a href="#gallery">Photo &amp; Video Gallery</a></li>
+            <li><a href="admin.html"><i class="fa-solid fa-shield-halved"></i> Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Specialties</h5>
+          <ul>
+            <li><a href="#services">Photography</a></li>
+            <li><a href="#services">Videography</a></li>
+            <li><a href="#services">Weddings &amp; Events</a></li>
+            <li><a href="#calculator">Price Estimator</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h5>Direct Contact</h5>
+          <p class="footer-contact-item"><i class="fa-solid fa-envelope"></i> chulitharv123@gmail.com</p>
+          <p class="footer-contact-item"><i class="fa-solid fa-clock"></i> 24/7 Creative Availability</p>
+          <p class="footer-contact-item"><i class="fa-solid fa-shield-halved"></i> 100% Quality Guaranteed</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 C4S Studio. All rights reserved. Capturing moments with passion.</p>
+        <div class="footer-legal">
+          <a href="#hero">Privacy Policy</a>
+          <span>•</span>
+          <a href="#hero">Terms of Service</a>
+          <span>•</span>
+          <a href="#hero">Back to Top ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL VIEWER FOR PORTFOLIO ITEMS -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-container glass-panel">
+      <button type="button" class="modal-close" aria-label="Close Project Modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamically injected via script.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-bell toast-icon"></i>
+    <span id="toastMessage">Notification message</span>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module" src="firebase-init.js"></script>
+  <!-- Script -->
+  <script src="site-content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
