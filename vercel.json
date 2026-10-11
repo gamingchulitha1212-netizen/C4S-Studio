@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/api/orders/:path*", "destination": "/api/orders.js" },
+    { "source": "/api/orders", "destination": "/api/orders.js" },
+    { "source": "/api/order", "destination": "/api/order.js" },
+    { "source": "/order", "destination": "/api/order.js" },
+    { "source": "/api/auth/:path*", "destination": "/api/auth.js" },
+    { "source": "/api/auth", "destination": "/api/auth.js" },
+    { "source": "/api/admin/:path*", "destination": "/api/admin.js" },
+    { "source": "/api/admin", "destination": "/api/admin.js" }
+  ]
+}
