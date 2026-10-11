@@ -1,0 +1,1383 @@
+/**
+ * C4S STUDIO — Official Interactive Engine
+ * Next-Gen Web Experience & Audio Synthesis
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  initParticleCanvas();
+  initHeaderScroll();
+  initMobileDrawer();
+  init3DCardTilt();
+  initStatsCounter();
+  initPortfolioFilters();
+  initCostEstimator();
+  initFaqAccordion();
+  initAudioSynthesizer();
+});
+
+/* ==========================================================================
+   1. AMBIENT PARTICLE CANVAS BACKGROUND
+   ========================================================================== */
+function initParticleCanvas() {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  const particleCount = Math.min(Math.floor(window.innerWidth / 18), 70);
+
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = (Math.random() - 0.5) * 0.7;
+      this.vy = (Math.random() - 0.5) * 0.7;
+      this.radius = Math.random() * 2 + 1;
+      this.alpha = Math.random() * 0.5 + 0.2;
+      this.color = Math.random() > 0.4 ? '#8b5cf6' : '#06b6d4';
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = this.alpha;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+  }
+
+  // Connect particles with faint glowing lines
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = '#8b5cf6';
+          ctx.globalAlpha = (1 - dist / 110) * 0.15;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+/* ==========================================================================
+   2. HEADER & NAVIGATION SCROLL EFFECTS
+   ========================================================================== */
+function initHeaderScroll() {
+  const header = document.getElementById('header');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section[id], header[id]');
+
+  window.addEventListener('scroll', () => {
+    // Header shadow & blur on scroll
+    if (window.scrollY > 40) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+
+    // Scroll Spy for Nav links
+    let currentId = '';
+    const scrollPos = window.scrollY + 120;
+
+    sections.forEach((section) => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === `#${currentId}`) {
+        link.classList.add('active');
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   3. MOBILE DRAWER MENU
+   ========================================================================== */
+function initMobileDrawer() {
+  const mobileToggle = document.getElementById('mobileToggle');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const drawerClose = document.getElementById('drawerClose');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  if (!mobileToggle || !mobileDrawer) return;
+
+  const toggleMenu = () => {
+    const isOpen = mobileDrawer.classList.toggle('open');
+    mobileToggle.classList.toggle('active', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    playSfx('click');
+  };
+
+  mobileToggle.addEventListener('click', toggleMenu);
+  if (drawerClose) drawerClose.addEventListener('click', toggleMenu);
+
+  mobileNavLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileDrawer.classList.remove('open');
+      mobileToggle.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+}
+
+/* ==========================================================================
+   4. HERO 3D CARD TILT INTERACTION
+   ========================================================================== */
+function init3DCardTilt() {
+  const cardWrapper = document.querySelector('.cube-card-wrapper');
+  const card = document.querySelector('.studio-card-3d');
+  if (!cardWrapper || !card) return;
+
+  cardWrapper.addEventListener('mousemove', (e) => {
+    const rect = cardWrapper.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -12;
+    const rotateY = ((x - centerX) / centerX) * 12;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+  });
+
+  cardWrapper.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+/* ==========================================================================
+   5. STATS COUNT-UP ANIMATION
+   ========================================================================== */
+function initStatsCounter() {
+  const statNumbers = document.querySelectorAll('.stat-number');
+  if (!statNumbers.length) return;
+
+  let started = false;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !started) {
+          started = true;
+          statNumbers.forEach((stat) => {
+            const target = parseInt(stat.getAttribute('data-count'), 10) || 0;
+            let current = 0;
+            const duration = 1800; // ms
+            const stepTime = 25;
+            const increment = target / (duration / stepTime);
+
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= target) {
+                stat.textContent = target;
+                clearInterval(timer);
+              } else {
+                stat.textContent = Math.floor(current);
+              }
+            }, stepTime);
+          });
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) observer.observe(heroStats);
+}
+
+/* ==========================================================================
+   6. PORTFOLIO FILTERS & MODAL DATA
+   ========================================================================== */
+const portfolioData = {
+  'wedding-film': {
+    title: 'Wedding Highlights',
+    category: 'Wedding Photo + Video',
+    tags: ['Wedding', 'Highlight Film', 'Candid Photos'],
+    gradientClass: 'grad-1',
+    icon: 'fa-ring',
+    description:
+      'A wedding story told through candid photographs and a cinematic highlight film, from the preparations to the last dance.',
+    specs: {
+      Photos: 'Edited high-resolution gallery',
+      Video: '4K highlight film',
+      Coverage: 'Full day or half day',
+      Delivery: 'Online gallery',
+    },
+    highlights: [
+      'Candid and posed moments',
+      'Cinematic color grade',
+      'Music-driven highlight edit',
+    ],
+  },
+  'portrait-session': {
+    title: 'Golden Hour Portraits',
+    category: 'Portrait Photography',
+    tags: ['Portrait', 'Natural Light', 'Retouching'],
+    gradientClass: 'grad-2',
+    icon: 'fa-camera-retro',
+    description:
+      'Relaxed portrait sessions in natural light, with warm tones and gentle direction so everyone looks and feels their best.',
+    specs: {
+      Session: '1 hour',
+      Photos: 'Edited high-resolution files',
+      Location: 'Studio or outdoor',
+      Delivery: 'Online gallery',
+    },
+    highlights: [
+      'Natural, comfortable posing',
+      'Soft, consistent color',
+      'Careful skin and detail retouching',
+    ],
+  },
+  'product-shoot': {
+    title: 'Product & Lifestyle Shoot',
+    category: 'Commercial Photography',
+    tags: ['Product', 'Commercial', 'Lifestyle'],
+    gradientClass: 'grad-3',
+    icon: 'fa-bag-shopping',
+    description:
+      'Clean, detailed product and lifestyle photographs for brands, online stores and menus.',
+    specs: {
+      Shots: 'Product and lifestyle',
+      Backgrounds: 'White, color or styled',
+      Files: 'Web and print ready',
+      Delivery: 'Online gallery',
+    },
+    highlights: [
+      'Sharp detail and accurate color',
+      'Consistent brand styling',
+      'Ready for web and social',
+    ],
+  },
+  'event-coverage': {
+    title: 'Event Highlight Reel',
+    category: 'Event Videography',
+    tags: ['Event', 'Video', '4K'],
+    gradientClass: 'grad-4',
+    icon: 'fa-champagne-glasses',
+    description:
+      'A fast-paced recap of an event, with crisp 4K footage, clean audio and a music-driven edit made for sharing.',
+    specs: {
+      Resolution: '4K',
+      Video: 'Highlight reel',
+      Audio: 'Clean capture and music',
+      Delivery: 'Download link',
+    },
+    highlights: [
+      'Multi-angle coverage',
+      'Energetic, shareable edit',
+      'Branded titles on request',
+    ],
+  },
+  'drone-aerial': {
+    title: 'Aerial Landscape Film',
+    category: 'Drone Videography',
+    tags: ['Drone', 'Aerial', 'Cinematic'],
+    gradientClass: 'grad-5',
+    icon: 'fa-plane',
+    description:
+      'Sweeping aerial shots of venues, landscapes and properties with smooth movement and a cinematic color grade.',
+    specs: {
+      Resolution: '4K aerial video',
+      Stills: 'High-resolution aerial photos',
+      Grade: 'Cinematic',
+      Delivery: 'Download link',
+    },
+    highlights: [
+      'Smooth, stable movement',
+      'Wide establishing shots',
+      'Matched color across clips',
+    ],
+  },
+  'brand-reel': {
+    title: 'Brand Promo Reel',
+    category: 'Commercial Videography',
+    tags: ['Brand', 'Commercial', 'Promo'],
+    gradientClass: 'grad-6',
+    icon: 'fa-clapperboard',
+    description:
+      'A short promotional video that shows what a business is about, built for social media and websites.',
+    specs: {
+      Resolution: '4K master',
+      Length: '30 to 90 seconds',
+      Formats: 'Landscape and vertical',
+      Delivery: 'Download link',
+    },
+    highlights: [
+      'Clear story and message',
+      'Branded color and titles',
+      'Cut for each social platform',
+    ],
+  },
+};
+
+function initPortfolioFilters() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      playSfx('click');
+
+      const filter = btn.getAttribute('data-filter');
+
+      document.querySelectorAll('.portfolio-card').forEach((card) => {
+        const category = card.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          card.style.display = 'flex';
+          card.style.animation = 'fadeIn 0.35s ease forwards';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+}
+
+function openModal(projectId) {
+  const modal = document.getElementById('projectModal');
+  const modalBody = document.getElementById('modalBody');
+  const project = portfolioData[projectId];
+
+  if (!modal || !modalBody || !project) return;
+  playSfx('open');
+
+  const tagsHtml = project.tags.map((t) => `<span class="tag">${t}</span>`).join(' ');
+
+  const specsHtml = Object.entries(project.specs || {})
+    .map(
+      ([key, val]) => `
+      <div class="spec-chip">
+        <i class="fa-solid fa-microchip"></i>
+        <span><strong>${key}:</strong> ${val}</span>
+      </div>`
+    )
+    .join('');
+
+  const highlightsHtml = project.highlights
+    .map((h) => `<li><i class="fa-solid fa-check" style="color:var(--cyan);margin-right:8px;"></i>${h}</li>`)
+    .join('');
+
+  modalBody.innerHTML = `
+    <div class="modal-content-grid">
+      <div class="modal-preview-hero ${project.gradientClass}">
+        <i class="fa-solid ${project.icon}"></i>
+      </div>
+      <div class="modal-details">
+        <div class="portfolio-tags" style="margin-bottom: 0.8rem;">
+          ${tagsHtml}
+        </div>
+        <h3>${project.title}</h3>
+        <p>${project.description}</p>
+
+        ${specsHtml ? `<h4 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.8rem;color:#ffffff;">Technical Specifications</h4><div class="modal-spec-row">${specsHtml}</div>` : ''}
+
+        <h4 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.8rem;color:#ffffff;">Key Features</h4>
+        <ul style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;color:var(--text-muted);font-size:0.92rem;">
+          ${highlightsHtml}
+        </ul>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn btn-primary glow-effect" onclick="orderSimilarProject('${project.category}')">
+            <i class="fa-solid fa-bolt"></i> Order Similar Project
+          </button>
+          <button class="btn btn-secondary" onclick="closeModal()">
+            Close Details
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const modal = document.getElementById('projectModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  playSfx('click');
+}
+
+// Close modal on Escape key
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+function orderSimilarProject(category) {
+  closeModal();
+  const contactSelect = document.getElementById('contactService');
+  if (contactSelect) {
+    for (let i = 0; i < contactSelect.options.length; i++) {
+      if (
+        contactSelect.options[i].text.toLowerCase().includes(category.toLowerCase()) ||
+        contactSelect.options[i].value.toLowerCase().includes(category.toLowerCase())
+      ) {
+        contactSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  const messageBox = document.getElementById('message');
+  if (messageBox) {
+    messageBox.value = `Hi C4S Studio! I was impressed by your "${category}" showcase and would love to start a similar project.`;
+  }
+
+  const contactSection = document.getElementById('contact');
+  if (contactSection) {
+    contactSection.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  showToast(`Selected "${category}" for your inquiry!`);
+}
+
+/* ==========================================================================
+   7. INTERACTIVE PROJECT COST ESTIMATOR
+   ========================================================================== */
+function initCostEstimator() {
+  if (!document.getElementById('totalEstimate')) return;
+
+  // Settings can be changed from the admin panel (window.C4S_estimatorCfg)
+  const cfg = () => Object.assign(
+    { cur: '$', code: 'USD', unit: 'Hours', unitOne: 'Hour', perUnit: 5, rate: 305, localText: 'රු {amount} LKR' },
+    window.C4S_estimatorCfg || {}
+  );
+
+  function calculate() {
+    const c = cfg();
+    const totalEstimate = document.getElementById('totalEstimate');
+    const lkrEstimate = document.getElementById('lkrEstimate');
+    const slider = document.getElementById('durationSlider');
+    const activeChip = document.querySelector('.calc-chip.active') || document.querySelector('.calc-chip');
+
+    const basePrice = Number(activeChip?.getAttribute('data-cost')) || 0;
+    const serviceName = activeChip?.getAttribute('data-service') || '';
+    const duration = Number(slider?.value) || 1;
+    const unitText = duration === 1 ? c.unitOne : c.unit;
+
+    const durationFactor = Math.max(duration - 1, 0) * Number(c.perUnit);
+
+    let addonsTotal = 0;
+    const selectedAddonNames = [];
+    document.querySelectorAll('.addon-checkbox').forEach((cb) => {
+      if (cb.checked) {
+        addonsTotal += Number(cb.value) || 0;
+        selectedAddonNames.push(cb.getAttribute('data-name'));
+      }
+    });
+
+    const finalAmount = Math.round((basePrice + durationFactor + addonsTotal) * 100) / 100;
+    totalEstimate.textContent = finalAmount;
+
+    if (lkrEstimate) {
+      lkrEstimate.textContent = c.localText.replace('{amount}', Math.round(finalAmount * Number(c.rate)).toLocaleString());
+    }
+    const set = (id, text) => { const n = document.getElementById(id); if (n) n.textContent = text; };
+    set('durationValue', duration);
+    set('durationUnit', unitText);
+    set('summaryService', serviceName);
+    set('summaryDuration', `${duration} ${unitText}`);
+    set('summaryAddons', selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None');
+  }
+  window.C4S_recalc = calculate;
+
+  // Event delegation, so chips and add-ons rendered later (from the admin panel) work too
+  document.addEventListener('click', (e) => {
+    const chip = e.target.closest ? e.target.closest('.calc-chip') : null;
+    if (!chip) return;
+    document.querySelectorAll('.calc-chip').forEach((c) => c.classList.remove('active'));
+    chip.classList.add('active');
+    playSfx('click');
+    calculate();
+  });
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'durationSlider') calculate();
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target && e.target.classList && e.target.classList.contains('addon-checkbox')) {
+      playSfx('click');
+      calculate();
+    }
+  });
+
+  calculate();
+}
+
+function proceedWithEstimate() {
+  const service = document.getElementById('summaryService')?.textContent || 'Photo Session';
+  const duration = document.getElementById('summaryDuration')?.textContent || '3 Hours';
+  const addons = document.getElementById('summaryAddons')?.textContent || 'None';
+  const total = document.getElementById('totalEstimate')?.textContent || '40';
+  const lkr = document.getElementById('lkrEstimate')?.textContent || 'රු 12,000 LKR';
+
+  // Fill in contact form
+  const contactSelect = document.getElementById('contactService');
+  if (contactSelect) {
+    for (let i = 0; i < contactSelect.options.length; i++) {
+      if (contactSelect.options[i].text.toLowerCase().includes(service.toLowerCase())) {
+        contactSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  const budgetSelect = document.getElementById('budget');
+  if (budgetSelect && budgetSelect.options.length) {
+    // Pick the budget option whose range contains the estimate (works with any options set in the admin panel)
+    const totalNum = parseFloat(total) || 0;
+    let pick = -1;
+    for (let i = 0; i < budgetSelect.options.length; i++) {
+      const nums = (budgetSelect.options[i].text.match(/\d[\d,]*(?:\.\d+)?/g) || []).map((n) => parseFloat(n.replace(/,/g, '')));
+      if (!nums.length) continue;
+      const lo = nums[0];
+      const hi = nums.length > 1 ? nums[1] : Infinity;
+      if (totalNum >= lo && totalNum <= hi) { pick = i; break; }
+      if (totalNum >= lo) pick = i;
+    }
+    if (pick >= 0) budgetSelect.selectedIndex = pick;
+  }
+
+  // Remember what was selected (names only). The server works out the prices itself.
+  const totalNum = parseFloat(total) || 50;
+  const chipNow = document.querySelector('.calc-chip.active');
+  window.C4S_estimateCtx = {
+    service: chipNow ? chipNow.getAttribute('data-service') : '',
+    units: parseInt((document.getElementById('durationSlider') || {}).value, 10) || 1,
+    addons: Array.prototype.filter.call(document.querySelectorAll('.addon-checkbox'), (c) => c.checked).map((c) => c.getAttribute('data-name'))
+  };
+
+  const estSummary = `${service} (${duration}) with ${addons || 'standard delivery'}`;
+  openBookingModal(service || 'Custom Estimator Project', totalNum, estSummary);
+  showToast('Estimate transferred to instant booking!');
+  playSfx('success');
+}
+
+/* ==========================================================================
+   8. FAQ ACCORDION
+   ========================================================================== */
+function initFaqAccordion() {
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+  accordionHeaders.forEach((header) => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const isActive = item.classList.contains('active');
+
+      // Close all other items
+      document.querySelectorAll('.accordion-item').forEach((i) => {
+        i.classList.remove('active');
+      });
+
+      if (!isActive) {
+        item.classList.add('active');
+        playSfx('click');
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   9. DIRECT BOOKING MODAL & INVOICE GENERATION
+   ========================================================================== */
+window.openBookingModal = function(serviceName, defaultPrice, summaryNotes) {
+  const modal = document.getElementById('bookingModal');
+  if (!modal) return;
+  const form = document.getElementById('directBookingForm');
+  const successBox = document.getElementById('bookingSuccessBox');
+  if (form) form.classList.remove('hidden');
+  if (successBox) successBox.classList.add('hidden');
+
+  // Autofill Google user details if logged in
+  const googleUser = window.C4S_Firebase?.auth?.currentUser;
+  const nameInput = document.getElementById('modalClientName');
+  const emailInput = document.getElementById('modalClientEmail');
+  if (googleUser) {
+    if (nameInput && !nameInput.value) nameInput.value = googleUser.displayName || '';
+    if (emailInput && !emailInput.value) emailInput.value = googleUser.email || '';
+  }
+
+  // Pre-set date to tomorrow if empty
+  const dateInput = document.getElementById('modalEventDate');
+  if (dateInput && !dateInput.value) {
+    const tmr = new Date(Date.now() + 86400000);
+    dateInput.value = tmr.toISOString().split('T')[0];
+  }
+
+  // Select matching service or create option
+  const serviceSelect = document.getElementById('modalService');
+  if (serviceSelect && serviceName) {
+    let matched = false;
+    for (let i = 0; i < serviceSelect.options.length; i++) {
+      if (serviceSelect.options[i].value.toLowerCase().trim() === serviceName.toLowerCase().trim()) {
+        serviceSelect.selectedIndex = i;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      const opt = document.createElement('option');
+      opt.value = serviceName;
+      opt.textContent = serviceName + (defaultPrice ? ' — $' + defaultPrice : '');
+      if (defaultPrice) opt.setAttribute('data-price', defaultPrice);
+      opt.selected = true;
+      serviceSelect.appendChild(opt);
+    }
+  }
+
+  // Set price
+  const priceInput = document.getElementById('modalPrice');
+  if (priceInput) {
+    if (defaultPrice != null && !isNaN(parseFloat(defaultPrice))) {
+      priceInput.value = defaultPrice;
+    } else if (serviceSelect && serviceSelect.selectedOptions[0]) {
+      priceInput.value = serviceSelect.selectedOptions[0].getAttribute('data-price') || 50;
+    }
+  }
+
+  if (summaryNotes) {
+    const notesInput = document.getElementById('modalNotes');
+    if (notesInput && !notesInput.value) notesInput.value = summaryNotes;
+  }
+
+  syncModalPricing();
+  modal.classList.remove('hidden');
+  playSfx('click');
+};
+
+window.closeBookingModal = function() {
+  const modal = document.getElementById('bookingModal');
+  if (modal) modal.classList.add('hidden');
+  playSfx('click');
+};
+
+window.syncModalPricing = function() {
+  const serviceSelect = document.getElementById('modalService');
+  const priceInput = document.getElementById('modalPrice');
+  const summaryService = document.getElementById('modalSummaryService');
+  const summaryTotal = document.getElementById('modalSummaryTotal');
+  const curSymbol = document.getElementById('modalCurrencySymbol');
+
+  const cur = (window.C4S_siteContent && window.C4S_siteContent.pricing && window.C4S_siteContent.pricing.currency) || '$';
+  if (curSymbol) curSymbol.textContent = cur;
+
+  if (serviceSelect && summaryService) {
+    summaryService.textContent = serviceSelect.value;
+    if (priceInput && serviceSelect.selectedOptions[0] && serviceSelect.selectedOptions[0].getAttribute('data-price')) {
+      if (!priceInput.value || priceInput._autoUpdated !== false) {
+        priceInput.value = serviceSelect.selectedOptions[0].getAttribute('data-price');
+      }
+    }
+  }
+
+  if (priceInput) {
+    const p = parseFloat(priceInput.value) || 0;
+    if (summaryTotal) {
+      summaryTotal.textContent = (window.C4S_Invoice ? window.C4S_Invoice.money(Math.round(p * 100), cur) : (cur + ' ' + p.toFixed(2)));
+    }
+  }
+};
+
+/**
+ * Handles the instant direct booking form submission.
+ */
+async function handleDirectBookingSubmit(event) {
+  event.preventDefault();
+  const form = document.getElementById('directBookingForm');
+  const successBox = document.getElementById('bookingSuccessBox');
+  const submitBtn = document.getElementById('modalSubmitBtn');
+  if (!form || !submitBtn) return;
+
+  const val = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  const clientName = val('modalClientName');
+  const clientEmail = val('modalClientEmail');
+  const clientPhone = val('modalClientPhone');
+  const eventDate = val('modalEventDate');
+  const serviceName = val('modalService') || 'Studio Session Booking';
+  const priceVal = parseFloat(val('modalPrice')) || 50;
+  const notes = val('modalNotes');
+  const cur = (window.C4S_siteContent && window.C4S_siteContent.pricing && window.C4S_siteContent.pricing.currency) || '$';
+
+  if (!clientName || !clientEmail || !/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(clientEmail)) {
+    showToast('Please enter your valid name and email address.');
+    return;
+  }
+
+  const googleUser = window.C4S_Firebase?.auth?.currentUser;
+  const isGoogleUser = !!googleUser;
+
+  const order = {
+    name: clientName,
+    email: clientEmail,
+    phone: clientPhone,
+    service: serviceName,
+    budget: cur + ' ' + priceVal,
+    price: priceVal,
+    currency: cur,
+    eventDate: eventDate,
+    message: notes ? `${serviceName} session booking. Notes: ${notes}` : `${serviceName} session booking`,
+    source: 'direct booking',
+    isGoogleUser: isGoogleUser,
+    googleEmail: (googleUser && googleUser.email) || ''
+  };
+
+  const originalContent = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Creating Booking & Invoice...</span>';
+
+  try {
+    if (!window.__c4sKey) {
+      window.__c4sKey = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : ('k-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10));
+    }
+
+    const payload = Object.assign({}, order, {
+      clientKey: window.__c4sKey,
+      packagePrice: priceVal,
+      price: priceVal,
+      currency: cur
+    });
+
+    // Build client invoice
+    const inv = buildClientInvoice(order);
+
+    // 1) Send order to backend
+    let result = null;
+    try {
+      let resp = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!resp.ok && resp.status === 404) {
+        resp = await fetch('/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      }
+      if (resp.ok) result = await resp.json();
+    } catch (e) {}
+
+    if (!result) {
+      if (window.C4S_submitOrder) await window.C4S_submitOrder(order);
+      result = { ok: true };
+    }
+
+    // Mirror to localStorage
+    try {
+      const localOrders = JSON.parse(localStorage.getItem('c4s_local_orders') || '[]');
+      localOrders.unshift(Object.assign({
+        id: (result && result.orderId) || ('ord_' + Date.now()),
+        createdAt: Date.now(),
+        status: 'new'
+      }, order, { invoice: inv }));
+      localStorage.setItem('c4s_local_orders', JSON.stringify(localOrders.slice(0, 100)));
+    } catch (e) {}
+
+    // 2) Send invoice to Customer
+    await sendCustomerInvoiceEmail(order, inv, clientEmail);
+
+    // 3) Send invoice notification to Admins
+    sendAdminNotification(order, inv);
+
+    window.__c4sKey = null;
+
+    // Show Confirmed Success Screen inside Modal
+    form.classList.add('hidden');
+    if (successBox) {
+      successBox.classList.remove('hidden');
+      const invNumEl = document.getElementById('bookingSuccessInvNumber');
+      const recipientEl = document.getElementById('bookingSuccessRecipientEmail');
+      const descEl = document.getElementById('bookingSuccessDesc');
+      if (invNumEl) invNumEl.textContent = (result && result.invoiceNumber) || inv.number || 'INV-CONFIRMED';
+      if (recipientEl) recipientEl.textContent = 'Sent to: ' + clientEmail;
+      if (descEl) descEl.innerHTML = `Thank you, <strong>${clientName}</strong>! Your session for <strong>${serviceName}</strong> on <strong>${eventDate || 'your scheduled date'}</strong> has been registered. An official order invoice was emailed directly to <strong>${clientEmail}</strong>.`;
+    }
+
+    playSfx('success');
+    showToast(`Booking confirmed! Invoice emailed to ${clientEmail}.`);
+  } catch (err) {
+    console.error('Booking error:', err);
+    showToast('Could not process booking. Please try again or reach out directly.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalContent;
+  }
+}
+window.handleDirectBookingSubmit = handleDirectBookingSubmit;
+
+/**
+ * Helper to build a complete client-side invoice object.
+ */
+function buildClientInvoice(order) {
+  const biz = (window.C4S_INVOICE_CONFIG && window.C4S_INVOICE_CONFIG.business) || {};
+  const branding = (window.C4S_siteContent && window.C4S_siteContent.branding) || {};
+  const studioName = branding.siteName || biz.name || biz.businessName || 'C4S Studio';
+  const logoUrl = branding.logoUrl || biz.logoUrl || '';
+  const cur = order.currency || (window.C4S_siteContent && window.C4S_siteContent.pricing && window.C4S_siteContent.pricing.currency) || biz.currency || '$';
+
+  let items = [];
+  let subtotalCents = 0;
+
+  if (order.price != null && !isNaN(parseFloat(order.price))) {
+    const cents = Math.round(parseFloat(order.price) * 100);
+    items.push({
+      description: (order.service || 'Photography & Videography') + ' Session Booking',
+      qty: 1,
+      unitCents: cents,
+      lineCents: cents
+    });
+    subtotalCents = cents;
+  } else if (order.source === 'estimator' && window.C4S_estimateCtx) {
+    const est = window.C4S_estimateCtx;
+    const m = /Estimated Total:\s*\D*?([\d,]+(?:\.\d{1,2})?)/i.exec(order.message || '');
+    const estVal = m ? parseFloat(m[1].replace(/,/g, '')) : (parseFloat(document.getElementById('totalEstimate')?.textContent || '50') || 50);
+    const cents = Math.round(estVal * 100);
+    const itemTitle = (est.service || order.service || 'Creative Project') + (est.units ? ' (' + est.units + ' hrs)' : '');
+    items.push({ description: itemTitle, qty: 1, unitCents: cents, lineCents: cents });
+    subtotalCents = cents;
+  } else {
+    let priceFound = null;
+    const formCfg = (window.C4S_siteContent && window.C4S_siteContent.form) || (window.C4S_DEFAULTS && window.C4S_DEFAULTS.form);
+    if (formCfg && Array.isArray(formCfg.serviceOptions)) {
+      const opt = formCfg.serviceOptions.find((o) => o.title && o.title.toLowerCase().trim() === (order.service || '').toLowerCase().trim());
+      if (opt && opt.price && parseFloat(opt.price) > 0) {
+        priceFound = parseFloat(opt.price);
+      }
+    }
+    if (!priceFound) {
+      const bMatch = /\$?([\d,]+)/.exec(order.budget || '');
+      priceFound = bMatch ? parseFloat(bMatch[1].replace(/,/g, '')) : 50;
+    }
+    const cents = Math.round(priceFound * 100);
+    items.push({
+      description: (order.service || 'Photography & Videography') + ' Session Booking',
+      qty: 1,
+      unitCents: cents,
+      lineCents: cents
+    });
+    subtotalCents = cents;
+  }
+
+  const now = new Date();
+  const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const invNumber = 'INV-' + now.getFullYear() + '-' + String(Math.floor(1000 + Math.random() * 9000));
+
+  const inv = {
+    number: invNumber,
+    customerName: order.name || 'Valued Client',
+    customerEmail: order.email || '',
+    customerPhone: order.phone || '',
+    service: order.service || 'Photography & Videography',
+    eventDate: order.eventDate || '',
+    items: items,
+    subtotalCents: subtotalCents,
+    discountCents: 0,
+    taxBp: 0,
+    taxCents: 0,
+    totalCents: subtotalCents,
+    currency: cur,
+    issueDate: ymd(now),
+    dueDate: ymd(new Date(now.getTime() + 7 * 86400000)),
+    notes: 'Order confirmed. Thank you for choosing ' + studioName + '! We look forward to capturing your moments.',
+    business: {
+      name: studioName,
+      address: biz.address || 'Colombo, Sri Lanka',
+      phone: biz.phone || '+94 7X XXX XXXX',
+      email: biz.email || (window.C4S_CONFIG && window.C4S_CONFIG.adminEmail) || 'chulitharv123@gmail.com',
+      logoUrl: logoUrl,
+      payment: biz.payment || 'Direct bank transfer, cash, or online payment upon session delivery.',
+      footer: biz.footer || 'Thank you for choosing ' + studioName + '. Visual stories told with passion.'
+    }
+  };
+
+  window.C4S_lastInvoice = inv;
+  return inv;
+}
+
+/**
+ * Opens the invoice in a new printable window or tab.
+ */
+function openInvoiceDoc(inv) {
+  inv = inv || window.C4S_lastInvoice;
+  if (!inv) {
+    showToast('No active invoice found.');
+    return;
+  }
+  const doc = (window.C4S_Invoice && window.C4S_Invoice.buildInvoiceDoc)
+    ? window.C4S_Invoice.buildInvoiceDoc(inv)
+    : ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + (inv.number || 'Invoice') + '</title></head><body>' + (window.C4S_Invoice ? window.C4S_Invoice.invoiceHTML(inv) : '') + '</body></html>');
+  const w = window.open('', '_blank');
+  if (w) {
+    w.document.open();
+    w.document.write(doc);
+    w.document.close();
+  }
+}
+window.C4S_openInvoiceDoc = openInvoiceDoc;
+
+/**
+ * Downloads the invoice directly as a self-contained, printable HTML document.
+ */
+function downloadInvoiceFile(inv) {
+  inv = inv || window.C4S_lastInvoice;
+  if (!inv) {
+    showToast('No active invoice found.');
+    return;
+  }
+  const doc = (window.C4S_Invoice && window.C4S_Invoice.buildInvoiceDoc)
+    ? window.C4S_Invoice.buildInvoiceDoc(inv)
+    : ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + (inv.number || 'Invoice') + '</title></head><body>' + (window.C4S_Invoice ? window.C4S_Invoice.invoiceHTML(inv) : '') + '</body></html>');
+  const blob = new Blob([doc], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const fileName = ((inv.business && inv.business.name) || 'C4S-Studio').replace(/[^A-Za-z0-9]/g, '-') + '-Invoice-' + (inv.number || 'Order') + '.html';
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    if (a.parentNode) a.parentNode.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 1000);
+  showToast('Invoice downloaded: ' + fileName);
+}
+window.C4S_downloadInvoiceFile = downloadInvoiceFile;
+
+/**
+ * Sends customer invoice notification directly to the customer's email.
+ */
+async function sendCustomerInvoiceEmail(order, inv, targetEmail) {
+  if (!targetEmail) return;
+  const studioName = (inv.business && inv.business.name) || 'C4S Studio';
+  const totalStr = window.C4S_Invoice ? window.C4S_Invoice.money(inv.totalCents, inv.currency) : (inv.currency + ' ' + (inv.totalCents / 100).toFixed(2));
+
+  // 1. Try sending through backend serverless API
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'send_invoice_email', invoice: inv, email: targetEmail })
+    });
+    if (res.ok) {
+      console.log('✅ Customer invoice delivered via backend emailer to', targetEmail);
+      return { ok: true, method: 'backend' };
+    }
+  } catch (e) {}
+
+  // 2. Fallback via FormSubmit AJAX
+  const payload = {
+    _subject: '📸 Your Official Booking Invoice [' + inv.number + '] - ' + studioName,
+    _template: 'table',
+    _captcha: 'false',
+    _replyto: (window.C4S_CONFIG && window.C4S_CONFIG.adminEmail) || 'chulitharv123@gmail.com',
+    'Invoice Number': inv.number,
+    'Client Name': inv.customerName,
+    'Service Requested': inv.service,
+    'Event / Shoot Date': inv.eventDate || 'To be scheduled',
+    'Total Amount': totalStr,
+    'Issue Date': inv.issueDate,
+    'Due Date': inv.dueDate,
+    'Booking Status': 'Confirmed Order',
+    'Studio Contact': (inv.business && inv.business.email) || 'chulitharv123@gmail.com',
+    'Payment Instructions': (inv.business && inv.business.payment) || 'Payment due on or before session date.'
+  };
+
+  try {
+    await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('✅ Customer invoice dispatched via FormSubmit to', targetEmail);
+  } catch (err) {
+    console.warn('Customer invoice email warning:', err);
+  }
+}
+
+/**
+ * Handles the Customer Help & Support Message Form ("Send a Message").
+ */
+async function handleContactSubmit(event) {
+  event.preventDefault();
+  const form = document.getElementById('contactForm');
+  const successBox = document.getElementById('formSuccessMessage');
+  if (!form || !successBox) return;
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  // Honeypot check
+  if (document.getElementById('website') && document.getElementById('website').value) {
+    form.style.display = 'none';
+    successBox.classList.add('visible');
+    return;
+  }
+
+  const val = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  const enteredEmail = val('email');
+  const userName = val('name');
+  const phone = val('phone');
+  const helpTopic = val('helpTopic') || 'General Support Question';
+  const message = val('message');
+
+  const originalContent = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending Message...</span>';
+
+  try {
+    const adminEmail = (window.C4S_CONFIG && window.C4S_CONFIG.notificationEmail) || 'chulitharv123@gmail.com';
+    const payload = {
+      _subject: '💬 C4S Studio Support Inquiry: ' + userName + ' (' + helpTopic + ')',
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: enteredEmail,
+      'Sender Name': userName,
+      'Email Address': enteredEmail,
+      'Phone / WhatsApp': phone || 'Not provided',
+      'Inquiry Category': helpTopic,
+      'Message': message,
+      'Date Submitted': new Date().toLocaleString()
+    };
+
+    // 1. Dispatch support request to admin email via FormSubmit
+    try {
+      await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(adminEmail), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {}
+
+    // 2. Also register in backend orders list as support message
+    try {
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create',
+          name: userName,
+          email: enteredEmail,
+          phone: phone,
+          service: 'Help: ' + helpTopic,
+          budget: 'Support inquiry',
+          message: message,
+          source: 'support message'
+        })
+      });
+    } catch (e) {}
+
+    form.style.display = 'none';
+    successBox.classList.add('visible');
+    playSfx('success');
+    showToast('Your message has been sent to our studio team.');
+  } catch (err) {
+    console.error('Contact error:', err);
+    showToast('Could not send message. Please reach out directly via WhatsApp or Email.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalContent;
+  }
+}
+
+/**
+ * Sends order notification and invoice details to ALL registered studio admins.
+ * Uses FormSubmit with _cc to broadcast to all admins simultaneously.
+ */
+async function sendAdminNotification(order, inv) {
+  const primaryAdmin = (window.C4S_CONFIG && window.C4S_CONFIG.notificationEmail) || 'chulitharv123@gmail.com';
+  let adminList = [primaryAdmin];
+  if (window.C4S_Firebase && typeof window.C4S_Firebase.getAdminEmails === 'function') {
+    const list = window.C4S_Firebase.getAdminEmails();
+    if (Array.isArray(list) && list.length) {
+      list.forEach((em) => {
+        em = String(em || '').toLowerCase().trim();
+        if (em && !adminList.includes(em)) adminList.push(em);
+      });
+    }
+  }
+  const otherAdmins = adminList.filter((em) => em !== primaryAdmin).join(',');
+  const studioName = (inv && inv.business && inv.business.name) || 'C4S Studio';
+  const totalStr = inv ? (window.C4S_Invoice ? window.C4S_Invoice.money(inv.totalCents, inv.currency) : (inv.currency + ' ' + (inv.totalCents / 100).toFixed(2))) : (order.budget || 'Custom');
+
+  const payload = {
+    _subject: '📸 New ' + studioName + ' Order & Invoice: ' + (order.name || 'Client') + ' (' + (order.service || 'Shoot') + ')',
+    _template: 'table',
+    _captcha: 'false',
+    _replyto: order.email || '',
+    'Invoice Number': (inv && inv.number) || 'INV-PENDING',
+    'Total Amount': totalStr,
+    'Client Name': order.name || 'Not provided',
+    'Client Email': order.email || 'Not provided',
+    'Phone / WhatsApp': order.phone || 'Not provided',
+    'Service Requested': order.service || 'General Inquiry',
+    'Budget': order.budget || 'Not specified',
+    'Event / Shoot Date': order.eventDate || 'Not specified',
+    'Google Signed-In': order.isGoogleUser ? ('Yes (' + order.googleEmail + ')') : 'No (Guest visitor)',
+    'Message': order.message || '',
+    'Source': order.source || 'Website Form',
+    'Date Submitted': new Date().toLocaleString()
+  };
+  if (otherAdmins) {
+    payload._cc = otherAdmins;
+  }
+
+  // 1. Send via FormSubmit AJAX
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(primaryAdmin), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      console.log('✅ Order notification broadcast to admins:', adminList.join(', '));
+      return { ok: true, method: 'formsubmit-ajax' };
+    }
+  } catch (err) {
+    console.warn('FormSubmit AJAX attempt error:', err);
+  }
+
+  // 2. Hidden Iframe Form Submit Fallback
+  try {
+    const frameId = 'c4s_notify_frame';
+    let frame = document.getElementById(frameId);
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.id = frameId;
+      frame.name = frameId;
+      frame.style.display = 'none';
+      document.body.appendChild(frame);
+    }
+
+    const f = document.createElement('form');
+    f.action = 'https://formsubmit.co/' + encodeURIComponent(primaryAdmin);
+    f.method = 'POST';
+    f.target = frameId;
+    f.style.display = 'none';
+
+    for (const [k, v] of Object.entries(payload)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = String(v);
+      f.appendChild(input);
+    }
+
+    document.body.appendChild(f);
+    f.submit();
+    setTimeout(() => { if (f && f.parentNode) f.parentNode.removeChild(f); }, 3000);
+    console.log('✅ Order notification dispatched via FormSubmit frame to', primaryAdmin);
+    return { ok: true, method: 'formsubmit-iframe' };
+  } catch (err) {
+    console.warn('FormSubmit iframe attempt error:', err);
+  }
+
+  // 3. EmailJS fallback
+  const ejs = window.C4S_CONFIG && window.C4S_CONFIG.emailjs;
+  if (ejs && ejs.publicKey && ejs.serviceId && ejs.templateId && window.emailjs) {
+    try {
+      await window.emailjs.send(ejs.serviceId, ejs.templateId, {
+        to_email: primaryAdmin,
+        client_name: order.name,
+        client_email: order.email,
+        client_phone: order.phone,
+        service: order.service,
+        budget: order.budget,
+        event_date: order.eventDate,
+        message: order.message
+      }, ejs.publicKey);
+      return { ok: true, method: 'emailjs' };
+    } catch (err) {
+      console.warn('EmailJS attempt error:', err);
+    }
+  }
+
+  return { ok: false };
+}
+window.C4S_sendAdminNotification = sendAdminNotification;
+
+function resetContactForm() {
+  const form = document.getElementById('contactForm');
+  const successBox = document.getElementById('formSuccessMessage');
+  const successActions = document.getElementById('formSuccessActions');
+  if (form && successBox) {
+    form.reset();
+    form.style.display = 'block';
+    if (successActions) successActions.classList.add('d-none');
+    successBox.classList.remove('visible');
+    playSfx('click');
+  }
+}
+
+/* ==========================================================================
+   10. TOAST NOTIFICATION UTILITY
+   ========================================================================== */
+let toastTimeout;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toastMessage');
+  if (!toast || !toastMessage) return;
+
+  clearTimeout(toastTimeout);
+  toastMessage.textContent = message;
+  toast.classList.add('show');
+
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
+}
+
+/* ==========================================================================
+   11. PROCEDURAL AUDIO SYNTHESIZER (Web Audio API)
+   ========================================================================== */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudioSynthesizer() {
+  const audioToggle = document.getElementById('audioToggle');
+  const soundIcon = document.getElementById('soundIcon');
+
+  if (!audioToggle) return;
+
+  audioToggle.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    if (soundIcon) {
+      soundIcon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+    }
+    showToast(soundEnabled ? 'Studio sound effects enabled' : 'Sound effects muted');
+    if (soundEnabled) playSfx('click');
+  });
+}
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      audioCtx = new AudioContext();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playSfx(type) {
+  if (!soundEnabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'click') {
+      // Subtle high-tech beep
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
+
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } else if (type === 'open') {
+      // Futuristic swell / blip
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } else if (type === 'success') {
+      // Dual-tone harmonic chime
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.setValueAtTime(659.25, now + 0.09); // E5
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(783.99, now + 0.09); // G5
+      gain2.gain.setValueAtTime(0.04, now + 0.09);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc.start(now);
+      osc.stop(now + 0.25);
+      osc2.start(now + 0.09);
+      osc2.stop(now + 0.35);
+    }
+  } catch (err) {
+    // Ignore audio autoplay restrictions
+  }
+}
+
+// Ensure global accessibility for inline HTML event handlers
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.orderSimilarProject = orderSimilarProject;
+window.proceedWithEstimate = proceedWithEstimate;
+window.handleContactSubmit = handleContactSubmit;
+window.resetContactForm = resetContactForm;
+window.showToast = showToast;
+
