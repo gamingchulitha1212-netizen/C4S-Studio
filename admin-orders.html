@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Orders - C4S Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070913;--card:rgba(14,18,36,.85);--line:rgba(255,255,255,.1);--primary:#8b5cf6;--cyan:#06b6d4;--text:#f1f3f9;--dim:#9aa3bd;--new:#f59e0b;--prog:#06b6d4;--done:#4ade80;--canc:#9aa3bd}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse at 20% -10%,rgba(139,92,246,.25),transparent 55%),var(--bg);color:var(--text);font:15px/1.5 'Inter',sans-serif;padding:28px 16px 80px;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px}.sub{color:var(--dim);margin-bottom:12px}
+.nav{margin-bottom:20px;font-size:14px}.nav a{color:var(--cyan);margin-right:16px;text-decoration:none}.nav a:hover{text-decoration:underline}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{cursor:pointer;text-align:left;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.stat.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary) inset}
+.stat b{display:block;font-size:22px}.stat span{font-size:12.5px;color:var(--dim)}
+.tools{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+input[type=search],textarea,select{padding:9px 11px;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit}
+input[type=search]{flex:1;min-width:180px}textarea{width:100%;min-height:64px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
+button{font:600 13.5px 'Inter',sans-serif;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+button:hover{border-color:var(--primary)}button.primary{background:var(--primary);border-color:var(--primary)}button.del{color:#ff8a8a}
+.order{padding:0;overflow:hidden}
+.head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;flex-wrap:wrap}
+.who{min-width:0}.who b{font-size:16px;word-break:break-word}.who small{display:block;color:var(--dim);font-size:13px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.s-new{color:var(--new)}.s-in_progress{color:var(--prog)}.s-completed{color:var(--done)}.s-cancelled{color:var(--canc)}
+.body{padding:0 16px 16px;border-top:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 18px;margin:14px 0}
+.grid div small{display:block;color:var(--dim);font-size:12px}
+.grid a{color:var(--cyan);word-break:break-all}
+.msgbox{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+label{font-size:12.5px;color:var(--dim)}
+.msg{font-size:13px;color:var(--dim)}.msg.err{color:#ff8a8a}
+.hidden{display:none!important}a{color:var(--cyan)}
+.inv{margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
+.inv h4{font-size:15px;margin-bottom:6px}
+.inv input[type=text]{padding:8px 10px;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;width:100%}
+.irow{display:grid;grid-template-columns:minmax(120px,1fr) 70px 110px auto;gap:8px;margin-top:8px;align-items:center}
+.iopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px 12px;margin-top:10px}
+.totals{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(0,0,0,.25);font-size:14px}
+.totals div{display:flex;justify-content:space-between}.totals .grand{font-weight:700;font-size:16px;margin-top:4px}
+button.small{padding:4px 10px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Orders</h1>
+  <p class="sub">Requests sent from the website's order / contact form.</p>
+  <div class="nav"><a href="admin.html">← Gallery admin</a><a href="admin-content.html">Edit site content</a><a href="index.html" target="_blank">View site</a><a href="#" id="logout" class="hidden">Sign out</a></div>
+  <div id="gate" class="card">Checking your sign-in...</div>
+  <div id="app" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Search name, email, service or message">
+      <button type="button" id="csv">Export CSV</button>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+<script src="invoice-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, onValue, update, remove, serverTimestamp, get, runTransaction, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtJ-jgCvXZZPbOpE0DvAdM0Mqk2QTAL_E",
+  authDomain: "c4s-studio.firebaseapp.com",
+  databaseURL: "https://c4s-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "c4s-studio",
+  storageBucket: "c4s-studio.firebasestorage.app",
+  messagingSenderId: "199863379407",
+  appId: "1:199863379407:web:3c61416efa100b08685eba",
+  measurementId: "G-LT0K2EBBYD"
+};
+const ADMIN_EMAILS = ['chulitharv123@gmail.com'];
+const STATUS = { new: 'New', in_progress: 'In progress', completed: 'Completed', cancelled: 'Cancelled' };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+const $ = (s) => document.querySelector(s);
+const gate = $('#gate');
+let orders = [], filter = 'all', query = '', listening = false;
+let invoices = [];
+const drafts = new Map(), builderOpen = new Set(), busy = new Set();
+const BIZ_DEFAULT = { businessName: 'C4S Studio', address: '', phone: '', email: '', currency: '$', taxPercent: '0', dueDays: '7', prefix: 'INV', payment: '', footer: 'Thank you for choosing C4S Studio.' };
+let biz = Object.assign({}, BIZ_DEFAULT);
+const open = new Set();
+
+function h(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function fmt(ms) {
+  if (!ms) return '-';
+  const d = new Date(ms);
+  return isNaN(d.getTime()) ? '-' : d.toLocaleString();
+}
+function link(text, href) {
+  const a = h('a', null, text);
+  a.href = href; a.target = '_blank'; a.rel = 'noopener';
+  return a;
+}
+function field(label, node) {
+  const d = h('div');
+  d.appendChild(h('small', null, label));
+  if (typeof node === 'string') d.appendChild(document.createTextNode(node || '-'));
+  else d.appendChild(node);
+  return d;
+}
+
+function renderStats() {
+  const box = $('#stats');
+  box.innerHTML = '';
+  const counts = { all: orders.length };
+  Object.keys(STATUS).forEach(k => counts[k] = orders.filter(o => (o.status || 'new') === k).length);
+  [['all', 'All orders']].concat(Object.entries(STATUS)).forEach(([k, label]) => {
+    const b = h('button', 'stat' + (filter === k ? ' active' : ''));
+    b.type = 'button';
+    b.appendChild(h('b', null, String(counts[k])));
+    b.appendChild(h('span', null, label));
+    b.onclick = () => { filter = k; render(); };
+    box.appendChild(b);
+  });
+}
+
+function render() {
+  renderStats();
+  const list = $('#list');
+  list.innerHTML = '';
+  const q = query.trim().toLowerCase();
+  const shown = orders.filter(o => {
+    if (filter !== 'all' && (o.status || 'new') !== filter) return false;
+    if (!q) return true;
+    return [o.name, o.email, o.service, o.message, o.phone].join(' ').toLowerCase().indexOf(q) !== -1;
+  });
+  if (!shown.length) {
+    list.appendChild(h('div', 'card msg', orders.length ? 'No orders match.' : 'No orders yet. They will appear here when someone sends the form on your website.'));
+    return;
+  }
+  shown.forEach(o => {
+    const st = o.status || 'new';
+    const card = h('div', 'card order');
+    const head = h('div', 'head');
+    const who = h('div', 'who');
+    who.appendChild(h('b', null, o.name || '(no name)'));
+    who.appendChild(h('small', null, (o.service || 'No service') + '  |  ' + fmt(o.createdAt)));
+    head.appendChild(who);
+    head.appendChild(h('span', 'badge s-' + st, STATUS[st] || st));
+    head.onclick = () => { open.has(o.id) ? open.delete(o.id) : open.add(o.id); render(); };
+    card.appendChild(head);
+
+    if (open.has(o.id)) {
+      const body = h('div', 'body');
+      const grid = h('div', 'grid');
+      grid.appendChild(field('Email', /^[^\s@<>"]+@[^\s@<>"]+$/.test(o.email || '') ? link(o.email, 'mailto:' + o.email) : (o.email || '-')));
+      const digits = (o.phone || '').replace(/\D/g, '');
+      grid.appendChild(field('Phone / WhatsApp', digits.length >= 8 ? link(o.phone, 'https://wa.me/' + digits) : (o.phone || '-')));
+      grid.appendChild(field('Event / shoot date', o.eventDate));
+      grid.appendChild(field('Budget', o.budget));
+      grid.appendChild(field('Source', o.source));
+      grid.appendChild(field('Last updated', fmt(o.updatedAt)));
+      body.appendChild(grid);
+      body.appendChild(h('div', 'msgbox', o.message || ''));
+
+      const sel = h('select');
+      Object.entries(STATUS).forEach(([k, v]) => { const op = h('option', null, v); op.value = k; if (k === st) op.selected = true; sel.appendChild(op); });
+      const lbl = h('label', null, 'Status ');
+      lbl.appendChild(sel);
+      const note = h('textarea'); note.value = o.note || ''; note.placeholder = 'Private note (only you can see this)'; note.maxLength = 1000;
+      const msg = h('span', 'msg');
+      const save = h('button', 'primary', 'Save'); save.type = 'button';
+      save.onclick = async () => {
+        msg.className = 'msg'; msg.textContent = 'Saving...';
+        try {
+          await update(ref(db, 'orders/' + o.id), { status: sel.value, note: note.value.trim(), updatedAt: serverTimestamp() });
+          msg.textContent = 'Saved.';
+        } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+      };
+      const del = h('button', 'del', 'Delete'); del.type = 'button';
+      del.onclick = async () => {
+        if (!confirm('Delete this order permanently?')) return;
+        try { await remove(ref(db, 'orders/' + o.id)); open.delete(o.id); } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+      };
+      body.appendChild(note);
+      const row = h('div', 'row');
+      [lbl, save, del, msg].forEach(x => row.appendChild(x));
+      body.appendChild(row);
+      body.appendChild(invoicePanel(o));
+      card.appendChild(body);
+    }
+    list.appendChild(card);
+  });
+}
+
+
+// ==PURE-START==
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// "1500" or "1500.50" -> cents (integer). Returns null if it is not a valid money amount.
+function toCents(v) {
+  const s = String(v == null ? '' : v).trim().replace(/,/g, '');
+  if (!/^\d{1,9}(\.\d{1,2})?$/.test(s)) return null;
+  const parts = s.split('.');
+  return parseInt(parts[0], 10) * 100 + parseInt(((parts[1] || '') + '00').slice(0, 2), 10);
+}
+function money(c, cur) {
+  const neg = c < 0; c = Math.abs(c);
+  const whole = String(Math.floor(c / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (neg ? '-' : '') + cur + whole + '.' + String(c % 100).padStart(2, '0');
+}
+// Builds the invoice numbers from the form values. Everything is in whole cents, so there are no rounding errors.
+function computeInvoice(draft) {
+  const items = [];
+  for (let i = 0; i < draft.items.length; i++) {
+    const r = draft.items[i];
+    const d = (r.d || '').trim(), q = String(r.q || '').trim(), p = String(r.p || '').trim();
+    if (!d && !q && !p) continue;
+    const n = i + 1;
+    if (!d) return { ok: false, error: 'Item ' + n + ': description is required.' };
+    if (d.length > 200) return { ok: false, error: 'Item ' + n + ': description is too long (max 200).' };
+    if (!/^\d{1,4}$/.test(q) || parseInt(q, 10) < 1) return { ok: false, error: 'Item ' + n + ': quantity must be a whole number, 1 or more.' };
+    const unit = toCents(p);
+    if (unit === null || unit <= 0) return { ok: false, error: 'Item ' + n + ': price must be a number above 0 (up to 2 decimals), e.g. 1500 or 1500.50.' };
+    const qty = parseInt(q, 10);
+    items.push({ description: d, qty: qty, unitCents: unit, lineCents: qty * unit });
+  }
+  if (!items.length) return { ok: false, error: 'Add at least one item (description, quantity and price).' };
+  if (items.length > 50) return { ok: false, error: 'Maximum 50 items per invoice.' };
+  const subtotal = items.reduce((a, it) => a + it.lineCents, 0);
+  if (!Number.isSafeInteger(subtotal) || subtotal > 100000000000) return { ok: false, error: 'The total is too large.' };
+  let discount = 0;
+  if (String(draft.discount || '').trim() !== '') {
+    discount = toCents(draft.discount);
+    if (discount === null) return { ok: false, error: 'Discount must be a number (up to 2 decimals).' };
+    if (discount > subtotal) return { ok: false, error: 'Discount cannot be more than the subtotal.' };
+  }
+  let taxBp = 0;
+  const tp = String(draft.tax || '').trim();
+  if (tp !== '') {
+    if (!/^\d{1,3}(\.\d{1,2})?$/.test(tp) || parseFloat(tp) > 100) return { ok: false, error: 'Tax % must be a number from 0 to 100.' };
+    taxBp = Math.round(parseFloat(tp) * 100);
+  }
+  const due = String(draft.due || '').trim();
+  if (!/^\d{1,3}$/.test(due) || parseInt(due, 10) > 365) return { ok: false, error: 'Due days must be a whole number from 0 to 365.' };
+  const base = subtotal - discount;
+  const taxCents = Math.round(base * taxBp / 10000);
+  return { ok: true, items: items, subtotal: subtotal, discount: discount, taxBp: taxBp, taxCents: taxCents, total: base + taxCents, dueDays: parseInt(due, 10) };
+}
+// Second, independent check of every number. Throws if anything does not add up.
+function verifyCalc(c, shownTotalText, cur) {
+  let sum = 0;
+  c.items.forEach((it, i) => {
+    if (!(it.qty >= 1) || !(it.unitCents > 0)) throw new Error('Item ' + (i + 1) + ' has an invalid quantity or price.');
+    if (it.lineCents !== it.qty * it.unitCents) throw new Error('Item ' + (i + 1) + ' line total does not match quantity x price.');
+    sum += it.lineCents;
+  });
+  if (sum !== c.subtotal) throw new Error('Subtotal does not match the sum of the items.');
+  if (c.discount < 0 || c.discount > c.subtotal) throw new Error('Discount is out of range.');
+  const expectTax = Math.round((c.subtotal - c.discount) * c.taxBp / 10000);
+  if (expectTax !== c.taxCents) throw new Error('Tax amount does not match the tax %.');
+  if (c.subtotal - c.discount + c.taxCents !== c.total) throw new Error('Grand total does not add up.');
+  if (!(c.total > 0)) throw new Error('Grand total must be above 0.');
+  if (shownTotalText != null && shownTotalText !== money(c.total, cur)) throw new Error('The total shown on screen (' + shownTotalText + ') differs from the calculated total (' + money(c.total, cur) + ').');
+  return true;
+}
+function invoiceHTML(inv) {
+  const cur = inv.currency || '$', b = inv.business || {};
+  const items = Array.isArray(inv.items) ? inv.items : Object.values(inv.items || {});
+  const td = 'padding:8px 10px;border-bottom:1px solid #e5e7eb;';
+  const rows = items.map((it) => '<tr><td style="' + td + '">' + esc(it.description) + '</td><td style="' + td + 'text-align:right">' + esc(it.qty) + '</td><td style="' + td + 'text-align:right">' + money(it.unitCents, cur) + '</td><td style="' + td + 'text-align:right">' + money(it.lineCents, cur) + '</td></tr>').join('');
+  const line = (label, val, bold) => '<tr><td colspan="3" style="padding:6px 10px;text-align:right;' + (bold ? 'font-weight:700;font-size:16px;' : '') + '">' + label + '</td><td style="padding:6px 10px;text-align:right;' + (bold ? 'font-weight:700;font-size:16px;' : '') + '">' + val + '</td></tr>';
+  const nl = (s) => esc(s).replace(/\n/g, '<br>');
+  return '<div style="font-family:Arial,Helvetica,sans-serif;color:#111827;max-width:680px;margin:0 auto;padding:24px;border:1px solid #e5e7eb">' +
+    '<table width="100%" style="border-collapse:collapse"><tr><td style="vertical-align:top"><div style="font-size:22px;font-weight:700">' + esc(b.name || 'C4S Studio') + '</div>' +
+    '<div style="color:#6b7280;font-size:13px">' + nl(b.address || '') + (b.phone ? '<br>' + esc(b.phone) : '') + (b.email ? '<br>' + esc(b.email) : '') + '</div></td>' +
+    '<td style="text-align:right;vertical-align:top"><div style="font-size:24px;font-weight:700;letter-spacing:1px">INVOICE</div><div style="font-size:14px">' + esc(inv.number) + '</div></td></tr></table>' +
+    '<table width="100%" style="border-collapse:collapse;margin-top:18px;font-size:14px"><tr><td style="vertical-align:top"><div style="color:#6b7280;font-size:12px">BILL TO</div><strong>' + esc(inv.customerName) + '</strong><br>' + esc(inv.customerEmail) + (inv.customerPhone ? '<br>' + esc(inv.customerPhone) : '') + '</td>' +
+    '<td style="text-align:right;vertical-align:top"><div>Issue date: ' + esc(inv.issueDate) + '</div><div>Due date: ' + esc(inv.dueDate) + '</div></td></tr></table>' +
+    '<table width="100%" style="border-collapse:collapse;margin-top:18px;font-size:14px"><tr style="background:#f3f4f6"><th style="padding:8px 10px;text-align:left">Description</th><th style="padding:8px 10px;text-align:right">Qty</th><th style="padding:8px 10px;text-align:right">Unit price</th><th style="padding:8px 10px;text-align:right">Amount</th></tr>' + rows +
+    line('Subtotal', money(inv.subtotalCents, cur)) +
+    (inv.discountCents ? line('Discount', '-' + money(inv.discountCents, cur)) : '') +
+    (inv.taxBp ? line('Tax (' + (inv.taxBp / 100) + '%)', money(inv.taxCents, cur)) : '') +
+    line('Total due', money(inv.totalCents, cur), true) + '</table>' +
+    (inv.notes ? '<p style="margin-top:16px;font-size:14px"><strong>Notes</strong><br>' + nl(inv.notes) + '</p>' : '') +
+    (b.payment ? '<p style="margin-top:16px;font-size:14px"><strong>How to pay</strong><br>' + nl(b.payment) + '</p>' : '') +
+    (b.footer ? '<p style="margin-top:20px;font-size:13px;color:#6b7280">' + nl(b.footer) + '</p>' : '') + '</div>';
+}
+// ==PURE-END==
+
+async function loadBiz() {
+  try {
+    const v = (await get(ref(db, 'settings/invoice'))).val();
+    biz = Object.assign({}, BIZ_DEFAULT, v || {});
+  } catch (e) { biz = Object.assign({}, BIZ_DEFAULT); }
+}
+const bizCur = () => String(biz.currency || '$').slice(0, 6);
+const bizPrefix = () => (String(biz.prefix || 'INV').replace(/[^A-Za-z0-9]/g, '').slice(0, 10).toUpperCase() || 'INV');
+const emailOk = (e) => /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(e || '');
+const pad = (n) => String(n).padStart(2, '0');
+const ymd = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
+async function sendInvoiceEmail(id, inv) {
+  const c = (window.C4S_INVOICE_CONFIG && window.C4S_INVOICE_CONFIG.emailjs) || {};
+  try {
+    if (!c.publicKey || !c.serviceId || !c.templateId) throw new Error('Email is not set up yet. Fill in invoice-config.js (EmailJS keys).');
+    if (!window.emailjs) throw new Error('The email library did not load. Check your internet connection.');
+    if (!emailOk(inv.customerEmail)) throw new Error('The customer email address is not valid.');
+    const bn = (inv.business && inv.business.name) || 'C4S Studio';
+    await window.emailjs.send(c.serviceId, c.templateId, {
+      to_email: inv.customerEmail, to_name: inv.customerName || '', invoice_number: inv.number, business_name: bn,
+      total_text: money(inv.totalCents, inv.currency || '$'), subject: 'Invoice ' + inv.number + ' from ' + bn, invoice_html: invoiceHTML(inv)
+    }, { publicKey: c.publicKey });
+    await update(ref(db, 'invoices/' + id), { emailStatus: 'sent', emailSentAt: serverTimestamp(), emailError: null });
+  } catch (e) {
+    const m = String((e && (e.text || e.message)) || 'Unknown error').slice(0, 280);
+    try { await update(ref(db, 'invoices/' + id), { emailStatus: 'failed', emailError: m }); } catch (x) {}
+    throw new Error(m);
+  }
+}
+
+// Reserves a unique number (atomic counter), then writes the invoice + number index + order lock in ONE atomic update.
+// The database rules refuse a second invoice for the same order and a reused number.
+async function createInvoice(order, c) {
+  const lock = (await get(ref(db, 'orderInvoice/' + order.id))).val();
+  if (lock) {
+    const ex = invoices.find((i) => i.id === lock);
+    if (!ex || ex.status !== 'void') throw new Error('This order already has an invoice' + (ex ? ' (' + ex.number + ')' : '') + '. Duplicate invoices are blocked.');
+  }
+  const tx = await runTransaction(ref(db, 'invoiceCounter'), (cur) => (Number(cur) || 0) + 1);
+  if (!tx.committed) throw new Error('Could not reserve an invoice number. Please try again.');
+  const number = bizPrefix() + '-' + new Date().getFullYear() + '-' + String(tx.snapshot.val()).padStart(4, '0');
+  const id = push(ref(db, 'invoices')).key;
+  const now = new Date(), due = new Date(now.getTime() + c.dueDays * 86400000);
+  const inv = {
+    number: number, orderId: order.id, customerName: (order.name || '').slice(0, 100), customerEmail: (order.email || '').slice(0, 150),
+    items: c.items, subtotalCents: c.subtotal, discountCents: c.discount, taxBp: c.taxBp, taxCents: c.taxCents, totalCents: c.total,
+    currency: bizCur(), issueDate: ymd(now), dueDate: ymd(due), status: 'issued', emailStatus: 'not_sent', createdAt: serverTimestamp(),
+    business: { name: String(biz.businessName || 'C4S Studio').slice(0, 600), address: String(biz.address || '').slice(0, 600), phone: String(biz.phone || '').slice(0, 600), email: String(biz.email || '').slice(0, 600), payment: String(biz.payment || '').slice(0, 600), footer: String(biz.footer || '').slice(0, 600) }
+  };
+  if (order.phone) inv.customerPhone = String(order.phone).slice(0, 40);
+  if (c.notes) inv.notes = c.notes.slice(0, 1000);
+  const updates = {};
+  updates['invoices/' + id] = inv;
+  updates['invoiceNumbers/' + number] = id;
+  updates['orderInvoice/' + order.id] = id;
+  try { await update(ref(db), updates); }
+  catch (e) { throw new Error('The invoice was blocked: ' + e.message + ' (a duplicate is refused, or the invoice rules are not published yet)'); }
+  const saved = Object.assign({}, inv, { createdAt: Date.now() });
+  return { id: id, inv: saved };
+}
+
+function draftFor(o) {
+  if (!drafts.has(o.id)) {
+    const m = /Estimated Total:\s*\D*?([\d,]+(?:\.\d{1,2})?)/i.exec(o.message || '');
+    drafts.set(o.id, { items: [{ d: o.service || '', q: '1', p: m ? m[1].replace(/,/g, '') : '' }], discount: '', tax: String(biz.taxPercent || '0'), due: String(biz.dueDays || '7'), notes: '' });
+  }
+  return drafts.get(o.id);
+}
+
+function printInvoice(inv) {
+  const doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + esc(inv.number) + '</title></head><body style="margin:0;padding:20px">' + invoiceHTML(inv) + '</body></html>';
+  const url = URL.createObjectURL(new Blob([doc], { type: 'text/html' }));
+  const w = window.open(url, '_blank');
+  if (w) w.addEventListener('load', () => { w.focus(); w.print(); });
+}
+
+function invoicePanel(o) {
+  const wrap = h('div', 'inv');
+  wrap.appendChild(h('h4', null, 'Invoice'));
+  const msg = h('span', 'msg');
+  const mine = invoices.filter((i) => i.orderId === o.id).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const active = mine.find((i) => i.status !== 'void');
+
+  if (active) {
+    const cur = active.currency || '$';
+    wrap.appendChild(h('div', 'msg', active.number + '  |  ' + ({ issued: 'Issued', paid: 'Paid', void: 'Void' }[active.status] || active.status) + '  |  Total ' + money(active.totalCents, cur) + '  |  Email: ' + (active.emailStatus === 'sent' ? 'sent to ' + active.customerEmail : active.emailStatus === 'failed' ? 'FAILED (' + (active.emailError || 'error') + ')' : 'not sent yet')));
+    const row = h('div', 'row');
+    const mkBtn = (label, cls, fn) => { const b = h('button', cls || '', label); b.type = 'button'; b.onclick = fn; row.appendChild(b); return b; };
+    mkBtn(active.emailStatus === 'sent' ? 'Resend email' : 'Send email', 'primary', async () => {
+      if (!confirm('Email invoice ' + active.number + ' (' + money(active.totalCents, cur) + ') to ' + active.customerEmail + '?')) return;
+      msg.className = 'msg'; msg.textContent = 'Sending...';
+      try { await sendInvoiceEmail(active.id, active); msg.textContent = 'Email sent.'; } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+    });
+    mkBtn('Print / PDF', '', () => printInvoice(active));
+    if (active.status === 'issued') mkBtn('Mark paid', '', async () => { try { await update(ref(db, 'invoices/' + active.id), { status: 'paid' }); } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; } });
+    mkBtn('Void', 'del', async () => {
+      if (!confirm('Void invoice ' + active.number + '? The number is never reused. You can then create a new invoice for this order.')) return;
+      try { await update(ref(db, 'invoices/' + active.id), { status: 'void' }); } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+    });
+    row.appendChild(msg);
+    wrap.appendChild(row);
+    return wrap;
+  }
+
+  if (mine.length) wrap.appendChild(h('div', 'msg', 'Previous invoice ' + mine[0].number + ' was voided.'));
+  if (!builderOpen.has(o.id)) {
+    const b = h('button', 'primary', 'Create invoice'); b.type = 'button'; b.style.marginTop = '6px';
+    b.onclick = () => { builderOpen.add(o.id); render(); };
+    wrap.appendChild(b);
+    return wrap;
+  }
+
+  const d = draftFor(o), cur = bizCur();
+  const list = h('div');
+  const totals = h('div', 'totals');
+  const refresh = () => {
+    totals.textContent = '';
+    const c = computeInvoice(d);
+    if (!c.ok) { totals.appendChild(h('div', 'msg', c.error)); return null; }
+    const line = (a, b, cls) => { const r = h('div', cls || ''); r.appendChild(h('span', null, a)); r.appendChild(h('span', null, b)); totals.appendChild(r); };
+    line('Subtotal', money(c.subtotal, cur));
+    if (c.discount) line('Discount', '-' + money(c.discount, cur));
+    if (c.taxBp) line('Tax (' + (c.taxBp / 100) + '%)', money(c.taxCents, cur));
+    line('Total', money(c.total, cur), 'grand');
+    return c;
+  };
+  const drawItems = () => {
+    list.textContent = '';
+    d.items.forEach((r, i) => {
+      const row = h('div', 'irow');
+      const mk = (ph, key, mode) => { const x = h('input'); x.type = 'text'; x.placeholder = ph; x.value = r[key]; if (mode) x.inputMode = mode; x.oninput = () => { r[key] = x.value; refresh(); }; row.appendChild(x); };
+      mk('Item / service', 'd'); mk('Qty', 'q', 'numeric'); mk('Unit price', 'p', 'decimal');
+      const rm = h('button', 'small del', 'Remove'); rm.type = 'button';
+      rm.onclick = () => { d.items.splice(i, 1); if (!d.items.length) d.items.push({ d: '', q: '1', p: '' }); drawItems(); refresh(); };
+      row.appendChild(rm); list.appendChild(row);
+    });
+  };
+  drawItems();
+  const add = h('button', 'small', '+ Add item'); add.type = 'button'; add.style.marginTop = '8px';
+  add.onclick = () => { d.items.push({ d: '', q: '1', p: '' }); drawItems(); };
+  const opts = h('div', 'iopts');
+  const opt = (label, key, ph) => { const w = h('div'); w.appendChild(h('label', null, label)); const x = h('input'); x.type = 'text'; x.value = d[key]; x.placeholder = ph || ''; x.oninput = () => { d[key] = x.value; refresh(); }; w.appendChild(x); opts.appendChild(w); };
+  opt('Discount (' + cur + ')', 'discount', '0'); opt('Tax %', 'tax', '0'); opt('Due in (days)', 'due', '7');
+  const notes = h('textarea'); notes.placeholder = 'Notes on the invoice (optional)'; notes.maxLength = 1000; notes.value = d.notes; notes.style.marginTop = '10px';
+  notes.oninput = () => { d.notes = notes.value; };
+  wrap.appendChild(list); wrap.appendChild(add); wrap.appendChild(opts); wrap.appendChild(notes); wrap.appendChild(totals);
+  refresh();
+
+  const go = async (send) => {
+    if (busy.has(o.id)) return;
+    msg.className = 'msg err';
+    if (send && !emailOk(o.email)) { msg.textContent = 'The customer email address is not valid.'; return; }
+    const c = computeInvoice(d);
+    if (!c.ok) { msg.textContent = c.error; return; }
+    c.notes = (d.notes || '').trim();
+    try { verifyCalc(c, totals.querySelector('.grand span:last-child') && totals.querySelector('.grand span:last-child').textContent, cur); }
+    catch (e) { msg.textContent = 'Check failed: ' + e.message; return; }
+    if (!confirm('Create this invoice?\n\nCustomer: ' + o.name + '\nTotal: ' + money(c.total, cur) + '\n' + (send ? 'It will be emailed to: ' + o.email : 'No email will be sent.'))) return;
+    busy.add(o.id);
+    msg.className = 'msg'; msg.textContent = 'Creating invoice...';
+    try {
+      const made = await createInvoice(o, c);
+      builderOpen.delete(o.id); drafts.delete(o.id);
+      if (send) {
+        try { await sendInvoiceEmail(made.id, made.inv); alert('Invoice ' + made.inv.number + ' created and emailed to ' + o.email + '.'); }
+        catch (e) { alert('Invoice ' + made.inv.number + ' was created, but the email failed:\n' + e.message + '\n\nYou can use "Send email" on the invoice again.'); }
+      } else alert('Invoice ' + made.inv.number + ' created.');
+    } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+    finally { busy.delete(o.id); }
+  };
+  const row = h('div', 'row');
+  const b1 = h('button', 'primary', 'Create invoice & email it'); b1.type = 'button'; b1.onclick = () => go(true);
+  const b2 = h('button', null, 'Create only'); b2.type = 'button'; b2.onclick = () => go(false);
+  const b3 = h('button', 'del', 'Cancel'); b3.type = 'button'; b3.onclick = () => { builderOpen.delete(o.id); render(); };
+  [b1, b2, b3, msg].forEach((x) => row.appendChild(x));
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function startListening() {
+  if (listening) return;
+  listening = true;
+  loadBiz().then(render);
+  onValue(ref(db, 'invoices'), (snap) => {
+    invoices = [];
+    snap.forEach((c) => { invoices.push({ id: c.key, ...c.val() }); });
+    render();
+  }, (err) => { console.warn('Invoices not readable yet:', err.message); });
+  onValue(ref(db, 'orders'), snap => {
+    orders = [];
+    snap.forEach(c => { orders.push({ id: c.key, ...c.val() }); });
+    orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    render();
+  }, err => {
+    $('#list').innerHTML = '';
+    $('#list').appendChild(h('div', 'card msg err', 'Could not load orders: ' + err.message + ' (Publish the "orders" database rules from the admin Database Rules box.)'));
+  });
+}
+
+$('#q').addEventListener('input', e => { query = e.target.value; render(); });
+$('#csv').onclick = () => {
+  const cols = ['createdAt', 'status', 'name', 'email', 'phone', 'service', 'budget', 'eventDate', 'source', 'message', 'note'];
+  const cell = (v) => {
+    let s = String(v == null ? '' : v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  };
+  const rows = [cols.join(',')].concat(orders.map(o => cols.map(c => cell(c === 'createdAt' ? (o.createdAt ? new Date(o.createdAt).toISOString() : '') : o[c])).join(',')));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
+  a.download = 'c4s-orders.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+$('#logout').onclick = (e) => { e.preventDefault(); signOut(auth); };
+window.login = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (e) { gate.textContent = e.message; } };
+
+onAuthStateChanged(auth, u => {
+  $('#logout').classList.toggle('hidden', !u);
+  if (!u) {
+    $('#app').classList.add('hidden'); gate.classList.remove('hidden');
+    gate.innerHTML = 'Please sign in with the admin account. <button class="primary" onclick="login()">Sign in with Google</button>';
+  } else if (u.emailVerified && ADMIN_EMAILS.includes((u.email || '').toLowerCase())) {
+    gate.classList.add('hidden'); $('#app').classList.remove('hidden'); startListening();
+  } else {
+    $('#app').classList.add('hidden'); gate.classList.remove('hidden');
+    gate.textContent = "This account isn't authorized for admin access.";
+  }
+});
+</script>
+</body>
+</html>

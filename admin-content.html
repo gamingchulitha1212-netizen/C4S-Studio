@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Edit Site Content - C4S Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070913;--card:rgba(14,18,36,.85);--line:rgba(255,255,255,.1);--primary:#8b5cf6;--cyan:#06b6d4;--text:#f1f3f9;--dim:#9aa3bd}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse at 20% -10%,rgba(139,92,246,.25),transparent 55%),var(--bg);color:var(--text);font:15px/1.5 'Inter',sans-serif;padding:28px 16px 80px;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px}.sub{color:var(--dim);margin-bottom:12px}
+.nav{margin-bottom:20px;font-size:14px}.nav a{color:var(--cyan);margin-right:16px;text-decoration:none}.nav a:hover{text-decoration:underline}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+details.card>summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none}
+details.card>summary::after{content:"+";float:right;color:var(--primary)}
+details[open].card>summary::after{content:"–"}
+label{display:block;font-size:12.5px;color:var(--dim);margin:12px 0 4px}
+input[type=text],textarea,select{width:100%;padding:9px 11px;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
+textarea{min-height:70px;resize:vertical}
+.chk{display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--text);font-size:14px}
+.listh{margin-top:20px;font-weight:600;font-size:14px;color:var(--cyan)}
+.item{border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin-top:10px;background:rgba(255,255,255,.02)}
+.itemtop{display:flex;justify-content:space-between;align-items:center;padding-top:8px;font-size:13px;color:var(--dim)}
+button{font:600 13.5px 'Inter',sans-serif;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+button:hover{border-color:var(--primary)}
+button.primary{background:var(--primary);border-color:var(--primary)}
+button.small{padding:3px 9px;font-size:12px}
+button.del{color:#ff8a8a}
+.actions{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.msg{font-size:13px;color:var(--dim)}.msg.ok{color:#4ade80}.msg.err{color:#ff8a8a}
+.hidden{display:none!important}a{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Edit Site Content</h1>
+  <p class="sub">Change the text on your website. Click Save on a section and it goes live right away.</p>
+  <div class="nav"><a href="admin.html">← Gallery admin</a><a href="index.html" target="_blank">View site</a><a href="#" id="logout" class="hidden">Sign out</a></div>
+  <div id="gate" class="card">Checking your sign-in...</div>
+  <div id="editor" class="hidden"></div>
+</div>
+<script src="site-defaults.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtJ-jgCvXZZPbOpE0DvAdM0Mqk2QTAL_E",
+  authDomain: "c4s-studio.firebaseapp.com",
+  databaseURL: "https://c4s-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "c4s-studio",
+  storageBucket: "c4s-studio.firebasestorage.app",
+  messagingSenderId: "199863379407",
+  appId: "1:199863379407:web:3c61416efa100b08685eba",
+  measurementId: "G-LT0K2EBBYD"
+};
+const ADMIN_EMAILS = ['chulitharv123@gmail.com'];
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
+const DEF = window.C4S_DEFAULTS;
+
+const ICONS = [['fa-solid fa-camera','Camera'],['fa-solid fa-camera-retro','Camera (retro)'],['fa-solid fa-video','Video camera'],['fa-solid fa-film','Film'],['fa-solid fa-clapperboard','Clapperboard'],['fa-solid fa-ring','Ring'],['fa-solid fa-champagne-glasses','Celebration'],['fa-solid fa-plane','Drone / plane'],['fa-solid fa-wand-magic-sparkles','Magic / editing'],['fa-solid fa-bag-shopping','Shopping bag'],['fa-solid fa-image','Image'],['fa-solid fa-heart','Heart'],['fa-solid fa-users','People'],['fa-solid fa-star','Star'],['fa-solid fa-rocket','Rocket'],['fa-solid fa-bolt','Bolt'],['fa-solid fa-check','Check'],['fa-solid fa-envelope','Email'],['fa-solid fa-phone','Phone'],['fa-brands fa-whatsapp','WhatsApp'],['fa-solid fa-location-dot','Location'],['fa-solid fa-clock','Clock'],['fa-brands fa-instagram','Instagram'],['fa-brands fa-facebook','Facebook'],['fa-brands fa-youtube','YouTube'],['fa-brands fa-tiktok','TikTok']];
+const T = (k,l,type)=>({k,l,type:type||'text'});
+const CATS = [['photo','Photography'],['video','Videography'],['commercial','Commercial']];
+const SCHEMA = {
+ about:{label:'About — "Stories Told Through Lens & Motion"',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words'),T('subtitle','Intro text','area')],
+  lists:[{k:'pillars',label:'Three highlights',one:'highlight',fields:[T('icon','Icon','icon'),T('title','Title'),T('text','Text','area')]},
+         {k:'steps',label:'Work process steps',one:'step',fields:[T('title','Title'),T('text','Text','area')]}]},
+ services:{label:'Photo & Video Services',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words'),T('subtitle','Intro text','area')],
+  lists:[{k:'items',label:'Services',one:'service',fields:[T('icon','Icon','icon'),T('title','Service name'),T('desc','Description','area'),T('points','Bullet points (one per line)','lines')]}]},
+ projects:{label:'Featured Projects',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words'),T('subtitle','Intro text','area')],
+  lists:[{k:'items',label:'Projects',one:'project',fields:[T('title','Project title'),T('category','Filter group','cat'),T('badge','Badge on the card (short)'),T('tag1','Tag 1'),T('tag2','Tag 2'),T('icon','Card icon','icon'),T('desc','Short description (on the card)','area'),T('details','Full description (in the popup)','area'),T('highlights','Key features in the popup (one per line)','lines')]}]},
+ pricing:{label:'Popular Studio Packages',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words'),T('subtitle','Intro text','area'),T('currency','Currency symbol')],
+  lists:[{k:'tiers',label:'Packages',one:'package',fields:[T('title','Package name'),T('badge','Small label (e.g. STARTER)'),T('desc','Short description','area'),T('price','Price (number)'),T('period','Per (e.g. session, project)'),T('features','Included (one per line)','lines'),T('buttonText','Button text'),T('popular','Mark as "Most popular"','check')]}]},
+ estimator:{label:'Interactive Tool — Project Estimator',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words'),T('subtitle','Intro text','area'),
+  T('servicesLabel','Label: services'),T('durationLabel','Label: duration slider'),T('addonsLabel','Label: add-ons'),
+  T('currency','Currency symbol (e.g. $)'),T('code','Currency code (e.g. USD)'),T('unit','Duration unit, plural (e.g. Hours)'),T('unitOne','Duration unit, singular (e.g. Hour)'),
+  T('perUnit','Extra cost for each unit above 1'),T('min','Slider minimum'),T('max','Slider maximum'),T('start','Slider starting value'),
+  T('rate','Local currency rate per 1 unit of the currency above (0 = hide)'),T('localText','Local price text, use {amount} (e.g. රු {amount} LKR)')],
+  lists:[{k:'services',label:'Services (choices)',one:'service',fields:[T('title','Service name'),T('price','Starting price (number)')]},
+         {k:'addons',label:'Add-ons',one:'add-on',fields:[T('title','Add-on name'),T('price','Extra price (number)')]}]},
+ form:{label:'Send a Message (contact form)',fields:[T('formTitle','Form heading'),T('formSubtitle','Text under the heading','area'),T('submitText','Send button text'),T('successTitle','Success box heading'),T('successText','Success box text','area')],
+  lists:[{k:'serviceOptions',label:'Service choices in the form',one:'choice',fields:[T('title','Choice')]},
+         {k:'budgetOptions',label:'Budget choices in the form (e.g. $50 - $100)',one:'choice',fields:[T('title','Choice')]}]},
+ invoice:{label:'Invoice settings (private, only you can see these)',fields:[T('businessName','Business name on the invoice'),T('address','Business address','area'),T('phone','Business phone'),T('email','Business email'),
+  T('currency','Currency symbol (e.g. Rs. or $)'),T('taxPercent','Default tax % (0 if none)'),T('dueDays','Payment due in (days)'),T('prefix','Invoice number prefix (letters/numbers, e.g. INV)'),
+  T('payment','Payment instructions (bank details, etc.)','area'),T('footer','Footer note','area')],lists:[]},
+ contact:{label:'Contact',fields:[T('badge','Small label above the heading'),T('title','Heading'),T('accent','Highlighted words (second line)'),T('text','Intro text','area')],
+  lists:[{k:'methods',label:'Contact details',one:'detail',fields:[T('icon','Icon','icon'),T('label','Label (e.g. Email Us)'),T('value','Value')]},
+         {k:'socials',label:'Social links',one:'link',fields:[T('icon','Icon','icon'),T('url','Link (must start with https://)')]}]}
+};
+
+const $ = (s,r)=>(r||document).querySelector(s);
+function mk(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+function input(f,val){
+  let c;
+  if(f.type==='area'||f.type==='lines'){c=mk('textarea');c.value=f.type==='lines'?(Array.isArray(val)?val.join('\n'):''):(val||'')}
+  else if(f.type==='icon'||f.type==='cat'){c=mk('select');(f.type==='icon'?ICONS:CATS).forEach(o=>{const op=mk('option',null,o[1]);op.value=o[0];c.appendChild(op)});c.value=val||(f.type==='icon'?ICONS[0][0]:'photo')}
+  else if(f.type==='check'){c=mk('input');c.type='checkbox';c.checked=val===true}
+  else{c=mk('input');c.type='text';c.value=val==null?'':val}
+  c.setAttribute('data-f',f.k);c.setAttribute('data-t',f.type);return c;
+}
+function field(f,val){
+  const w=mk('div');
+  if(f.type==='check'){const l=mk('label','chk');const i=input(f,val);l.appendChild(i);l.appendChild(document.createTextNode(f.l));w.appendChild(l);return w}
+  w.appendChild(mk('label',null,f.l));w.appendChild(input(f,val));return w;
+}
+function read(root,fields){
+  const o={};
+  fields.forEach(f=>{
+    const c=root.querySelector(':scope > div > [data-f="'+f.k+'"], :scope > div > label > [data-f="'+f.k+'"]');
+    if(!c)return;
+    o[f.k]=f.type==='check'?c.checked:f.type==='lines'?c.value.split('\n').map(s=>s.trim()).filter(Boolean):c.value.trim();
+  });
+  return o;
+}
+function itemRow(listEl,L,val){
+  const d=mk('div','item'),top=mk('div','itemtop'),nm=mk('span',null,L.one);
+  const bt=mk('span');
+  [['↑',-1],['↓',1]].forEach(([t,dir])=>{const b=mk('button','small',t);b.type='button';b.onclick=()=>{const s=dir<0?d.previousElementSibling:d.nextElementSibling;if(s)dir<0?listEl.insertBefore(d,s):listEl.insertBefore(s,d)};bt.appendChild(b);bt.appendChild(document.createTextNode(' '))});
+  const rm=mk('button','small del','Remove');rm.type='button';rm.onclick=()=>d.remove();bt.appendChild(rm);
+  top.appendChild(nm);top.appendChild(bt);d.appendChild(top);
+  L.fields.forEach(f=>d.appendChild(field(f,val&&val[f.k])));
+  listEl.appendChild(d);
+}
+function fill(sec,box,data){
+  const S=SCHEMA[sec];box.textContent='';
+  const top=mk('div','top');S.fields.forEach(f=>top.appendChild(field(f,data[f.k])));box.appendChild(top);
+  S.lists.forEach(L=>{
+    box.appendChild(mk('div','listh',L.label));
+    const le=mk('div','list');le.setAttribute('data-l',L.k);
+    (Array.isArray(data[L.k])?data[L.k]:[]).forEach(v=>itemRow(le,L,v));
+    box.appendChild(le);
+    const add=mk('button',null,'+ Add '+L.one);add.type='button';add.style.marginTop='10px';add.onclick=()=>itemRow(le,L,{});box.appendChild(add);
+  });
+}
+function collect(sec,box){
+  const S=SCHEMA[sec];
+  const o=read(box.querySelector('.top'),S.fields);
+  S.lists.forEach(L=>{
+    o[L.k]=[...box.querySelector('[data-l="'+L.k+'"]').children].map(d=>read(d,L.fields)).filter(x=>x.title||x.label||x.url);
+  });
+  return o;
+}
+function validate(sec,o){
+  if(sec==='contact'&&o.socials.some(s=>!/^https:\/\//i.test(s.url)))return 'Every social link must start with https://';
+  if(sec==='invoice'){
+    if(!/^[A-Za-z0-9]{1,10}$/.test(o.prefix))return 'Invoice prefix: 1-10 letters or numbers only.';
+    if(!/^\d{1,3}(\.\d{1,2})?$/.test(o.taxPercent)||Number(o.taxPercent)>100)return 'Tax % must be a number from 0 to 100.';
+    if(!/^\d{1,3}$/.test(o.dueDays))return 'Due days must be a whole number.';
+    if(!o.businessName)return 'Business name is required.';
+    if(o.currency.length>6)return 'Currency symbol is too long.';
+    return null;
+  }
+  if(sec==='form'){
+    if(!o.formTitle)return 'Form heading is required.';
+    if(!o.serviceOptions.length||!o.budgetOptions.length)return 'Add at least one service choice and one budget choice.';
+    return null;
+  }
+  if(sec==='estimator'){
+    const nums=['perUnit','min','max','start','rate'];
+    for(const k of nums){if(o[k]===''||!isFinite(Number(o[k]))||Number(o[k])<0)return 'Please enter a valid number (0 or more) for: '+k;}
+    if(Number(o.min)<1||Number(o.max)<=Number(o.min))return 'Slider maximum must be greater than the minimum (minimum at least 1).';
+    if(Number(o.start)<Number(o.min)||Number(o.start)>Number(o.max))return 'Starting value must be between the minimum and maximum.';
+    if(!o.services.length)return 'Add at least one service.';
+    if(o.services.concat(o.addons).some(x=>x.price===''||!isFinite(Number(x.price))||Number(x.price)<0))return 'Every price must be a number (0 or more).';
+    return null;
+  }
+  const need={about:'pillars',services:'items',projects:'items',pricing:'tiers',contact:'methods'}[sec];
+  if(!o[need].length)return 'Add at least one item, or use "Reset to default".';
+  return null;
+}
+async function build(){
+  const ed=$('#editor');ed.textContent='';
+  let saved={};try{saved=(await get(ref(db,'site'))).val()||{}}catch(e){ed.appendChild(mk('div','card msg err','Could not load saved content: '+e.message))}
+  try{const iv=(await get(ref(db,'settings/invoice'))).val();if(iv)saved.invoice=iv}catch(e){}
+  Object.keys(SCHEMA).forEach(sec=>{
+    const dt=mk('details','card');dt.appendChild(mk('summary',null,SCHEMA[sec].label));
+    const box=mk('div');dt.appendChild(box);
+    fill(sec,box,saved[sec]||DEF[sec]);
+    const act=mk('div','actions'),sv=mk('button','primary','Save changes'),rs=mk('button','del','Reset to default'),ms=mk('span','msg');
+    sv.type=rs.type='button';
+    sv.onclick=async()=>{const o=collect(sec,box),er=validate(sec,o);if(er){ms.className='msg err';ms.textContent=er;return}
+      ms.className='msg';ms.textContent='Saving...';
+      try{await set(ref(db,(sec==='invoice'?'settings/invoice':'site/'+sec)),o);ms.className='msg ok';ms.textContent='Saved. The website is updated.'}catch(e){ms.className='msg err';ms.textContent='Error: '+e.message+' (check the database rules for "site")'}};
+    rs.onclick=async()=>{if(!confirm('Go back to the original content for this section?'))return;
+      try{await remove(ref(db,(sec==='invoice'?'settings/invoice':'site/'+sec)));fill(sec,box,DEF[sec]);ms.className='msg ok';ms.textContent='Reset to default.'}catch(e){ms.className='msg err';ms.textContent='Error: '+e.message}};
+    act.appendChild(sv);act.appendChild(rs);act.appendChild(ms);dt.appendChild(act);ed.appendChild(dt);
+  });
+}
+const gate=$('#gate'),lo=$('#logout');
+lo.onclick=e=>{e.preventDefault();signOut(auth)};
+window.login=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){gate.textContent=e.message}};
+onAuthStateChanged(auth,u=>{
+  lo.classList.toggle('hidden',!u);
+  if(!u){gate.classList.remove('hidden');$('#editor').classList.add('hidden');gate.innerHTML='';gate.appendChild(document.createTextNode('Sign in with the admin account to edit the site. '));const b=mk('button','primary','Sign in with Google');b.onclick=window.login;gate.appendChild(b)}
+  else if(u.emailVerified&&ADMIN_EMAILS.includes((u.email||'').toLowerCase())){gate.classList.add('hidden');$('#editor').classList.remove('hidden');build()}
+  else{gate.classList.remove('hidden');$('#editor').classList.add('hidden');gate.textContent="This account isn't authorized to edit the site."}
+});
+</script>
+</body>
+</html>
