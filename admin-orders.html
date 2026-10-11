@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Orders - C4S Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070913;--card:rgba(14,18,36,.85);--line:rgba(255,255,255,.1);--primary:#8b5cf6;--cyan:#06b6d4;--text:#f1f3f9;--dim:#9aa3bd;--new:#f59e0b;--prog:#06b6d4;--done:#4ade80;--canc:#9aa3bd}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse at 20% -10%,rgba(139,92,246,.25),transparent 55%),var(--bg);color:var(--text);font:15px/1.5 'Inter',sans-serif;padding:28px 16px 80px;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px}.sub{color:var(--dim);margin-bottom:12px}
+.nav{margin-bottom:20px;font-size:14px}.nav a{color:var(--cyan);margin-right:16px;text-decoration:none}.nav a:hover{text-decoration:underline}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{cursor:pointer;text-align:left;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.stat.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary) inset}
+.stat b{display:block;font-size:22px}.stat span{font-size:12.5px;color:var(--dim)}
+.tools{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+input[type=search],textarea,select{padding:9px 11px;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit}
+input[type=search]{flex:1;min-width:180px}textarea{width:100%;min-height:64px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
+button{font:600 13.5px 'Inter',sans-serif;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+button:hover{border-color:var(--primary)}button.primary{background:var(--primary);border-color:var(--primary)}button.del{color:#ff8a8a}
+.order{padding:0;overflow:hidden}
+.head{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;flex-wrap:wrap}
+.who{min-width:0}.who b{font-size:16px;word-break:break-word}.who small{display:block;color:var(--dim);font-size:13px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.s-new{color:var(--new)}.s-in_progress{color:var(--prog)}.s-completed{color:var(--done)}.s-cancelled{color:var(--canc)}
+.body{padding:0 16px 16px;border-top:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 18px;margin:14px 0}
+.grid div small{display:block;color:var(--dim);font-size:12px}
+.grid a{color:var(--cyan);word-break:break-all}
+.msgbox{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+label{font-size:12.5px;color:var(--dim)}
+.msg{font-size:13px;color:var(--dim)}.msg.err{color:#ff8a8a}
+.hidden{display:none!important}a{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Orders</h1>
+  <p class="sub">Requests sent from the website's order / contact form.</p>
+  <div class="nav"><a href="admin.html">← Gallery admin</a><a href="admin-content.html">Edit site content</a><a href="index.html" target="_blank">View site</a><a href="#" id="logout" class="hidden">Sign out</a></div>
+  <div id="gate" class="card">Checking your sign-in...</div>
+  <div id="app" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Search name, email, service or message">
+      <button type="button" id="csv">Export CSV</button>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, onValue, update, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtJ-jgCvXZZPbOpE0DvAdM0Mqk2QTAL_E",
+  authDomain: "c4s-studio.firebaseapp.com",
+  databaseURL: "https://c4s-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "c4s-studio",
+  storageBucket: "c4s-studio.firebasestorage.app",
+  messagingSenderId: "199863379407",
+  appId: "1:199863379407:web:3c61416efa100b08685eba",
+  measurementId: "G-LT0K2EBBYD"
+};
+const ADMIN_EMAILS = ['chulitharv123@gmail.com'];
+const ADMIN_UID = 'ES2jAyjrGSQCq3i8a8324QULmFg2';
+const STATUS = { new: 'New', in_progress: 'In progress', completed: 'Completed', cancelled: 'Cancelled' };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+const $ = (s) => document.querySelector(s);
+const gate = $('#gate');
+let orders = [], filter = 'all', query = '', listening = false;
+const open = new Set();
+
+function h(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function fmt(ms) {
+  if (!ms) return '-';
+  const d = new Date(ms);
+  return isNaN(d.getTime()) ? '-' : d.toLocaleString();
+}
+function link(text, href) {
+  const a = h('a', null, text);
+  a.href = href; a.target = '_blank'; a.rel = 'noopener';
+  return a;
+}
+function field(label, node) {
+  const d = h('div');
+  d.appendChild(h('small', null, label));
+  if (typeof node === 'string') d.appendChild(document.createTextNode(node || '-'));
+  else d.appendChild(node);
+  return d;
+}
+
+function renderStats() {
+  const box = $('#stats');
+  box.innerHTML = '';
+  const counts = { all: orders.length };
+  Object.keys(STATUS).forEach(k => counts[k] = orders.filter(o => (o.status || 'new') === k).length);
+  [['all', 'All orders']].concat(Object.entries(STATUS)).forEach(([k, label]) => {
+    const b = h('button', 'stat' + (filter === k ? ' active' : ''));
+    b.type = 'button';
+    b.appendChild(h('b', null, String(counts[k])));
+    b.appendChild(h('span', null, label));
+    b.onclick = () => { filter = k; render(); };
+    box.appendChild(b);
+  });
+}
+
+function render() {
+  renderStats();
+  const list = $('#list');
+  list.innerHTML = '';
+  const q = query.trim().toLowerCase();
+  const shown = orders.filter(o => {
+    if (filter !== 'all' && (o.status || 'new') !== filter) return false;
+    if (!q) return true;
+    return [o.name, o.email, o.service, o.message, o.phone].join(' ').toLowerCase().indexOf(q) !== -1;
+  });
+  if (!shown.length) {
+    list.appendChild(h('div', 'card msg', orders.length ? 'No orders match.' : 'No orders yet. They will appear here when someone sends the form on your website.'));
+    return;
+  }
+  shown.forEach(o => {
+    const st = o.status || 'new';
+    const card = h('div', 'card order');
+    const head = h('div', 'head');
+    const who = h('div', 'who');
+    who.appendChild(h('b', null, o.name || '(no name)'));
+    who.appendChild(h('small', null, (o.service || 'No service') + '  |  ' + fmt(o.createdAt)));
+    head.appendChild(who);
+    head.appendChild(h('span', 'badge s-' + st, STATUS[st] || st));
+    head.onclick = () => { open.has(o.id) ? open.delete(o.id) : open.add(o.id); render(); };
+    card.appendChild(head);
+
+    if (open.has(o.id)) {
+      const body = h('div', 'body');
+      const grid = h('div', 'grid');
+      grid.appendChild(field('Email', /^[^\s@<>"]+@[^\s@<>"]+$/.test(o.email || '') ? link(o.email, 'mailto:' + o.email) : (o.email || '-')));
+      const digits = (o.phone || '').replace(/\D/g, '');
+      grid.appendChild(field('Phone / WhatsApp', digits.length >= 8 ? link(o.phone, 'https://wa.me/' + digits) : (o.phone || '-')));
+      grid.appendChild(field('Event / shoot date', o.eventDate));
+      grid.appendChild(field('Budget', o.budget));
+      grid.appendChild(field('Source', o.source));
+      grid.appendChild(field('Last updated', fmt(o.updatedAt)));
+      body.appendChild(grid);
+      body.appendChild(h('div', 'msgbox', o.message || ''));
+
+      const sel = h('select');
+      Object.entries(STATUS).forEach(([k, v]) => { const op = h('option', null, v); op.value = k; if (k === st) op.selected = true; sel.appendChild(op); });
+      const lbl = h('label', null, 'Status ');
+      lbl.appendChild(sel);
+      const note = h('textarea'); note.value = o.note || ''; note.placeholder = 'Private note (only you can see this)'; note.maxLength = 1000;
+      const msg = h('span', 'msg');
+      const save = h('button', 'primary', 'Save'); save.type = 'button';
+      save.onclick = async () => {
+        msg.className = 'msg'; msg.textContent = 'Saving...';
+        try {
+          await update(ref(db, 'orders/' + o.id), { status: sel.value, note: note.value.trim(), updatedAt: serverTimestamp() });
+          msg.textContent = 'Saved.';
+        } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+      };
+      const del = h('button', 'del', 'Delete'); del.type = 'button';
+      del.onclick = async () => {
+        if (!confirm('Delete this order permanently?')) return;
+        try { await remove(ref(db, 'orders/' + o.id)); open.delete(o.id); } catch (e) { msg.className = 'msg err'; msg.textContent = e.message; }
+      };
+      body.appendChild(note);
+      const row = h('div', 'row');
+      [lbl, save, del, msg].forEach(x => row.appendChild(x));
+      body.appendChild(row);
+      card.appendChild(body);
+    }
+    list.appendChild(card);
+  });
+}
+
+function startListening() {
+  if (listening) return;
+  listening = true;
+  onValue(ref(db, 'orders'), snap => {
+    orders = [];
+    snap.forEach(c => { orders.push({ id: c.key, ...c.val() }); });
+    orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    render();
+  }, err => {
+    $('#list').innerHTML = '';
+    $('#list').appendChild(h('div', 'card msg err', 'Could not load orders: ' + err.message + ' (Publish the "orders" database rules from the admin Database Rules box.)'));
+  });
+}
+
+$('#q').addEventListener('input', e => { query = e.target.value; render(); });
+$('#csv').onclick = () => {
+  const cols = ['createdAt', 'status', 'name', 'email', 'phone', 'service', 'budget', 'eventDate', 'source', 'message', 'note'];
+  const cell = (v) => {
+    let s = String(v == null ? '' : v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  };
+  const rows = [cols.join(',')].concat(orders.map(o => cols.map(c => cell(c === 'createdAt' ? (o.createdAt ? new Date(o.createdAt).toISOString() : '') : o[c])).join(',')));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
+  a.download = 'c4s-orders.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+$('#logout').onclick = (e) => { e.preventDefault(); signOut(auth); };
+window.login = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (e) { gate.textContent = e.message; } };
+
+onAuthStateChanged(auth, u => {
+  $('#logout').classList.toggle('hidden', !u);
+  if (!u) {
+    $('#app').classList.add('hidden'); gate.classList.remove('hidden');
+    gate.innerHTML = 'Please sign in with the admin account. <button class="primary" onclick="login()">Sign in with Google</button>';
+  } else if (u.uid === ADMIN_UID || ADMIN_EMAILS.includes((u.email || '').toLowerCase())) {
+    gate.classList.add('hidden'); $('#app').classList.remove('hidden'); startListening();
+  } else {
+    $('#app').classList.add('hidden'); gate.classList.remove('hidden');
+    gate.textContent = "This account isn't authorized for admin access.";
+  }
+});
+</script>
+</body>
+</html>
